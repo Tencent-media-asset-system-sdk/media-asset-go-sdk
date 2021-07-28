@@ -1,4 +1,4 @@
-package media_asset_sdk
+package mediaassetsdk
 
 import (
 	"crypto/md5"
@@ -13,7 +13,7 @@ import (
 
 	"github.com/Tencent-Ti/ti-sign-go/tisign"
 	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/common"
-	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/media_asset_service"
+	mediaassetservice "github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/media_asset_service"
 	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/media_asset_service/request"
 	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/media_asset_service/response"
 	ants "github.com/panjf2000/ants/v2"
@@ -59,7 +59,7 @@ func (m MediaAssetClient) applyUplod(mediaName string, mediaMeta request.MediaMe
 	maxTry := 3
 	rsp := &response.ApplyUploadResponse{}
 	for i := 0; i < maxTry; i++ {
-		err = media_asset_service.HttpPost(uri, header, req, rsp)
+		err = mediaassetservice.HttpPost(uri, header, req, rsp)
 		if rsp.Response.ApiError != nil {
 			bys, _ := json.Marshal(rsp)
 			err = errors.New("Response error: " + string(bys))
@@ -109,7 +109,7 @@ func (m MediaAssetClient) commitUpload(mediaID uint64, bucket, key, uploadID str
 	maxTry := 3
 	rsp := &response.CommitUploadResponse{}
 	for i := 0; i < maxTry; i++ {
-		err = media_asset_service.HttpPost(uri, header, req, rsp)
+		err = mediaassetservice.HttpPost(uri, header, req, rsp)
 		if rsp.Response.ApiError != nil {
 			bys, _ := json.Marshal(rsp)
 			err = errors.New("Response error: " + string(bys))
@@ -155,7 +155,7 @@ func (m MediaAssetClient) doUpload(filePath, key, bucket, uploadID string, corou
 		}
 		maxTry := 5
 		for i := 0; i < maxTry; i++ {
-			_, err = media_asset_service.UploadPart(header, uri, filebuf)
+			_, err = mediaassetservice.UploadPart(header, uri, filebuf)
 			if err == nil {
 				break
 			}

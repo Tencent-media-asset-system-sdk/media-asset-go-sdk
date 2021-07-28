@@ -7,7 +7,7 @@ import (
 	"path"
 	"strings"
 
-	media_asset_sdk "github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk"
+	mediaassetsdk "github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk"
 	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/media_asset_service/request"
 )
 
@@ -29,7 +29,7 @@ func main() {
 	flag.StringVar(&mediaSecondTag, "second_tag", "", "媒体二级标签[晚会、其他]")
 	flag.StringVar(&mediaLang, "lang", "0", "0 普通话, 1 粤语")
 	flag.Parse()
-	client := media_asset_sdk.MakeMediaAssetClient(host, port, secretID, secretKey, project, business)
+	client := mediaassetsdk.MakeMediaAssetClient(host, port, secretID, secretKey, project, business)
 	mediaMeta := request.MediaMeta{
 		MediaType:      mediaType,
 		MediaTag:       mediaTag,

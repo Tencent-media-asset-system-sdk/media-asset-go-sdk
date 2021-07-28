@@ -1,4 +1,4 @@
-package media_asset_sdk
+package mediaassetsdk
 
 import (
 	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/media_asset_service/request"
@@ -23,7 +23,7 @@ type MediaAssetFunction interface {
 
 	// DescribeMedias 拉取媒体列表
 	DescribeMedias(pageNumber, pageSize int, filterBy *request.FilterBy) (
-		mediaSet []*response.MediaInfo, TotalCount int, requestID string, err error)
+		mediaSet []*response.MediaInfo, totalCount int, requestID string, err error)
 
 	// DescribeMediaDetails 获取指定媒体集的详情
 	DescribeMediaDetails(mediaIDs []uint64) (mediaSet []*response.MediaInfo, requestID string, err error)

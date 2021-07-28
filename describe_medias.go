@@ -1,4 +1,4 @@
-package media_asset_sdk
+package mediaassetsdk
 
 import (
 	"encoding/json"
@@ -7,14 +7,14 @@ import (
 
 	"github.com/Tencent-Ti/ti-sign-go/tisign"
 	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/common"
-	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/media_asset_service"
+	mediaassetservice "github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/media_asset_service"
 	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/media_asset_service/request"
 	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/media_asset_service/response"
 )
 
 // RemoveMedias 拉取媒体列表
 func (m *MediaAssetClient) DescribeMedias(pageNumber, pageSize int, filterBy *request.FilterBy) (
-	mediaSet []*response.MediaInfo, TotalCount int, requestID string, err error) {
+	mediaSet []*response.MediaInfo, totalCount int, requestID string, err error) {
 	if m.Port == 0 {
 		m.Port = 80
 	}
@@ -52,7 +52,7 @@ func (m *MediaAssetClient) DescribeMedias(pageNumber, pageSize int, filterBy *re
 	maxTry := 3
 	rsp := &response.DescribeMediasResponse{}
 	for i := 0; i < maxTry; i++ {
-		err = media_asset_service.HttpPost(uri, header, req, rsp)
+		err = mediaassetservice.HttpPost(uri, header, req, rsp)
 		if rsp.Response.ApiError != nil {
 			bys, _ := json.Marshal(rsp)
 			err = errors.New("Response error: " + string(bys))

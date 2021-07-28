@@ -1,4 +1,4 @@
-package media_asset_service
+package mediaassetservice
 
 import (
 	"bytes"

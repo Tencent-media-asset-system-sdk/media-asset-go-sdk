@@ -48,7 +48,7 @@ import (
 	"path"
 	"strings"
 
-	media_asset_sdk "github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk"
+	mediaassetsdk "github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk"
 	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/media_asset_service/request"
 )
 
@@ -57,7 +57,7 @@ func main() {
 	var coroutineNum, port, project, business int
 	var filePath, mediaName, mediaType, mediaTag, mediaSecondTag, mediaLang string
   // TODO: config
-	client := media_asset_sdk.MakeMediaAssetClient(host, port, secretID, secretKey, project, business)
+	client := mediaassetsdk.MakeMediaAssetClient(host, port, secretID, secretKey, project, business)
 	mediaMeta := request.MediaMeta{
 		MediaType:      mediaType,
 		MediaTag:       mediaTag,

@@ -1,4 +1,4 @@
-package media_asset_sdk
+package mediaassetsdk
 
 import (
 	"encoding/json"
@@ -7,7 +7,7 @@ import (
 
 	"github.com/Tencent-Ti/ti-sign-go/tisign"
 	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/common"
-	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/media_asset_service"
+	mediaassetservice "github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/media_asset_service"
 	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/media_asset_service/request"
 	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/media_asset_service/response"
 )
@@ -49,7 +49,7 @@ func (m *MediaAssetClient) ModifyExpireTime(mediaID uint64, days int) (requestID
 	maxTry := 3
 	rsp := &response.ModifyExpireTimeResponse{}
 	for i := 0; i < maxTry; i++ {
-		err = media_asset_service.HttpPost(uri, header, req, rsp)
+		err = mediaassetservice.HttpPost(uri, header, req, rsp)
 		if rsp.Response.ApiError != nil {
 			bys, _ := json.Marshal(rsp)
 			err = errors.New("Response error: " + string(bys))

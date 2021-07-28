@@ -1,4 +1,4 @@
-package media_asset_sdk
+package mediaassetsdk
 
 import (
 	"errors"

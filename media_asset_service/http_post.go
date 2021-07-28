@@ -1,4 +1,4 @@
-package media_asset_service
+package mediaassetservice
 
 import (
 	"bytes"
@@ -9,6 +9,7 @@ import (
 	"net/http"
 )
 
+// HttpPost http post 请求
 func HttpPost(uri string, header map[string]string, req interface{}, rsp interface{}) (err error) {
 	body, _ := json.Marshal(req)
 	reqCtx, err := http.NewRequest(http.MethodPost, uri, bytes.NewReader(body))
