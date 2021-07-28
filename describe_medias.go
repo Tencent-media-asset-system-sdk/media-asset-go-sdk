@@ -38,6 +38,7 @@ func (m *MediaAssetClient) DescribeMedias(pageNumber, pageSize int, filterBy *re
 	req.PageSize = int32(pageSize)
 	req.FilterBy = *filterBy
 	req.Inner = m.Inner
+	req.Action = action
 	if m.Inner {
 		req.RequestID = common.GenerateRandomString(32)
 		req.Uin = m.InnerUserName

@@ -45,6 +45,7 @@ func (m MediaAssetClient) applyUplod(mediaName string, mediaMeta request.MediaMe
 	req.MediaMeta = mediaMeta
 	req.Size = strconv.FormatUint(fileSize, 10)
 	req.Inner = m.Inner
+	req.Action = action
 	if m.Inner {
 		req.RequestID = common.GenerateRandomString(32)
 		req.Uin = m.InnerUserName
@@ -95,6 +96,7 @@ func (m MediaAssetClient) commitUpload(mediaID uint64, bucket, key, uploadID str
 	req.Bucket = bucket
 	req.Key = key
 	req.UploadId = uploadID
+	req.Action = action
 	if m.Inner {
 		req.RequestID = common.GenerateRandomString(32)
 		req.Uin = m.InnerUserName

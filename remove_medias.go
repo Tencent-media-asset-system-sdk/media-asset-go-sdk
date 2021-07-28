@@ -35,6 +35,7 @@ func (m *MediaAssetClient) RemoveMedias(mediaIDs []uint64) (
 	req.TIBusinessID = uint32(m.TIBusinessID)
 	req.TIProjectID = uint32(m.TIProjectID)
 	req.MediaIDSet = mediaIDs
+	req.Action = action
 	if m.Inner {
 		req.RequestID = common.GenerateRandomString(32)
 		req.Uin = m.InnerUserName

@@ -8,7 +8,8 @@ type Request interface {
 // CommonRequest
 type CommonRequest struct {
 	RequestID     string `json:"RequestId,omitempty"`
-	AppID         uint64 `json:"AppID,,omitempty"`
+	AppID         uint64 `json:"AppID,omitempty"`
+	Action        string `json:"Action,omitempty"`
 	Uin           string `json:"Uin,,omitempty"`
 	SubAccountUin string `json:"SubAccountUin,omitempty"`
 	TIBusinessID  uint32 `json:"TIBusinessID,omitempty"`

@@ -37,6 +37,7 @@ func (m *MediaAssetClient) ModifyMedia(mediaID uint64, mediaTag, mediaSecondTag 
 	req.MediaID = mediaID
 	req.MediaTag = mediaTag
 	req.MediaSecondTag = mediaSecondTag
+	req.Action = action
 	if m.Inner {
 		req.RequestID = common.GenerateRandomString(32)
 		req.Uin = m.InnerUserName

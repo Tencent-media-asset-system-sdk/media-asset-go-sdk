@@ -34,6 +34,7 @@ func (m *MediaAssetClient) DescribeCategories() (
 	req := &request.DescribeCategoriesRequest{}
 	req.TIBusinessID = uint32(m.TIBusinessID)
 	req.TIProjectID = uint32(m.TIProjectID)
+	req.Action = action
 	if m.Inner {
 		req.RequestID = common.GenerateRandomString(32)
 		req.Uin = m.InnerUserName

@@ -35,6 +35,7 @@ func (m *MediaAssetClient) ModifyExpireTime(mediaID uint64, days int) (requestID
 	req.TIProjectID = uint32(m.TIProjectID)
 	req.MediaID = mediaID
 	req.Days = int32(days)
+	req.Action = action
 	if m.Inner {
 		req.RequestID = common.GenerateRandomString(32)
 		req.Uin = m.InnerUserName
