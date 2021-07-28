@@ -2,5 +2,7 @@ package response
 
 // ModifyMediaResponse
 type ModifyMediaResponse struct {
-	CommonResponse
+	Response struct {
+		CommonResponse
+	} `json:"Response"`
 }

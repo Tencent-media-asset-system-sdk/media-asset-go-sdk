@@ -4,7 +4,9 @@ import "github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/media_asset
 
 // DescribeCategoriesResponse
 type DescribeCategoriesResponse struct {
-	CommonResponse
-	CategorySet []*request.Category `json:"CategorySet"`
-	LabelSet    []*request.Label    `json:"LabelSet"`
+	Response struct {
+		CommonResponse
+		CategorySet []*request.Category `json:"CategorySet"`
+		LabelSet    []*request.Label    `json:"LabelSet"`
+	} `json:"Response"`
 }

@@ -7,13 +7,12 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"net/url"
 	"os"
 	"strconv"
 	"sync"
 
 	"github.com/Tencent-Ti/ti-sign-go/tisign"
-	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/common/utils"
+	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/common"
 	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/media_asset_service"
 	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/media_asset_service/request"
 	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/media_asset_service/response"
@@ -21,7 +20,7 @@ import (
 )
 
 // 上传分辨大小 10M
-const BloackSzie = 10 * 1024 * 1024
+const BloackSzie = 32 * 1024 * 1024
 
 func (m MediaAssetClient) applyUplod(mediaName string, mediaMeta request.MediaMeta, fileSize uint64) (
 	mediaID uint64, bucket, key, uploadId, requestID string, err error) {
@@ -47,7 +46,7 @@ func (m MediaAssetClient) applyUplod(mediaName string, mediaMeta request.MediaMe
 	req.Size = strconv.FormatUint(fileSize, 10)
 	req.Inner = m.Inner
 	if m.Inner {
-		req.RequestID = utils.GenerateRandomString(32)
+		req.RequestID = common.GenerateRandomString(32)
 		req.Uin = m.InnerUserName
 		req.SubAccountUin = m.InnerUserName
 		uri = m.InnerMediaAssetEndPoint + "/" + action
@@ -61,7 +60,7 @@ func (m MediaAssetClient) applyUplod(mediaName string, mediaMeta request.MediaMe
 	rsp := &response.ApplyUploadResponse{}
 	for i := 0; i < maxTry; i++ {
 		err = media_asset_service.HttpPost(uri, header, req, rsp)
-		if rsp.ApiError != nil {
+		if rsp.Response.ApiError != nil {
 			bys, _ := json.Marshal(rsp)
 			err = errors.New("Response error: " + string(bys))
 		}
@@ -69,7 +68,8 @@ func (m MediaAssetClient) applyUplod(mediaName string, mediaMeta request.MediaMe
 			break
 		}
 	}
-	return rsp.MediaID, rsp.Bucket, rsp.Key, rsp.UploadId, rsp.RequestID, err
+	return rsp.Response.MediaID, rsp.Response.Bucket, rsp.Response.Key,
+		rsp.Response.UploadId, rsp.Response.RequestID, err
 }
 
 func (m MediaAssetClient) commitUpload(mediaID uint64, bucket, key, uploadID string) (
@@ -96,7 +96,7 @@ func (m MediaAssetClient) commitUpload(mediaID uint64, bucket, key, uploadID str
 	req.Key = key
 	req.UploadId = uploadID
 	if m.Inner {
-		req.RequestID = utils.GenerateRandomString(32)
+		req.RequestID = common.GenerateRandomString(32)
 		req.Uin = m.InnerUserName
 		req.SubAccountUin = m.InnerUserName
 		uri = m.InnerMediaAssetEndPoint + "/" + action
@@ -110,15 +110,16 @@ func (m MediaAssetClient) commitUpload(mediaID uint64, bucket, key, uploadID str
 	rsp := &response.CommitUploadResponse{}
 	for i := 0; i < maxTry; i++ {
 		err = media_asset_service.HttpPost(uri, header, req, rsp)
-		if rsp.ApiError != nil {
+		if rsp.Response.ApiError != nil {
 			bys, _ := json.Marshal(rsp)
 			err = errors.New("Response error: " + string(bys))
 		}
 		if err == nil {
 			break
 		}
+		fmt.Println("Commit try ", i+1, " error: ", err.Error())
 	}
-	return rsp.RequestID, err
+	return rsp.Response.RequestID, err
 }
 
 func (m MediaAssetClient) doUpload(filePath, key, bucket, uploadID string, coroutineNum int) (err error) {
@@ -133,12 +134,14 @@ func (m MediaAssetClient) doUpload(filePath, key, bucket, uploadID string, corou
 		md5sum := hex.EncodeToString(h.Sum(nil))
 		canonicalQueryString := fmt.Sprintf("useJson=true&Bucket=%s&Key=%s&uploadId=%s&partNumber=%d&Content-MD5=%s",
 			bucket, key, uploadID, partNumber, md5sum)
-		canonicalQueryString = url.QueryEscape(canonicalQueryString)
-		uri := fmt.Sprintf("http://%s:%d/UploadPart?%s", m.Host, m.Port, canonicalQueryString)
+		// canonicalQueryString = url.QueryEscape(canonicalQueryString)
+		uri := ""
 		header := map[string]string{}
 		if m.Inner {
+			uri = fmt.Sprintf("http://%s/UploadPart?%s", m.InnerFileManagerEndPoint, canonicalQueryString)
 			header = nil
 		} else {
+			uri = fmt.Sprintf("http://%s:%d/FileManager/UploadPart?%s", m.Host, m.Port, canonicalQueryString)
 			headerContent := tisign.HttpHeaderContent{
 				XTCAction:   "UploadPart",               // 请求接口
 				XTCService:  "app-cdn4aowk",             // 接口所属服务名
@@ -160,7 +163,6 @@ func (m MediaAssetClient) doUpload(filePath, key, bucket, uploadID string, corou
 		wg.Done()
 	})
 	defer pool.Release()
-
 	file, err := os.Open(filePath)
 	if err != nil {
 		return err
@@ -179,7 +181,7 @@ func (m MediaAssetClient) doUpload(filePath, key, bucket, uploadID string, corou
 			break
 		}
 		// 如下代码打印出每次读取的文件块(字节数)
-		fmt.Println(string(buffer[:n]))
+		fmt.Println("Read file block length: ", n)
 		wg.Add(1)
 		filebuf := make([]byte, n)
 		copy(filebuf, buffer)
@@ -187,7 +189,9 @@ func (m MediaAssetClient) doUpload(filePath, key, bucket, uploadID string, corou
 		partNumber += 1
 	}
 	wg.Wait()
-	fmt.Println("Uploadfile success")
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -195,8 +199,9 @@ func (m MediaAssetClient) doUpload(filePath, key, bucket, uploadID string, corou
 // filePath 文件路径
 // coroutineNum 上传最大并发协程数
 // mediaInfo request.MediaMeta 媒体的类型和标签信息
-func (m MediaAssetClient) UploadFile(filePath, mediaName string, MediaMeta request.MediaMeta, coroutineNum int) (
+func (m *MediaAssetClient) UploadFile(filePath, mediaName string, mediaMeta request.MediaMeta, coroutineNum int) (
 	media *response.MediaInfo, requestIDSet []string, err error) {
+	tick := common.BuildTimeTick()
 	if m.Port == 0 {
 		m.Port = 80
 	}
@@ -206,7 +211,7 @@ func (m MediaAssetClient) UploadFile(filePath, mediaName string, MediaMeta reque
 		return media, requestIDSet, e
 	}
 	fileSize := stat.Size()
-	mediaID, key, bucket, uploadID, requestID, e := m.applyUplod(mediaName, media.MediaMeta, uint64(fileSize))
+	mediaID, bucket, key, uploadID, requestID, e := m.applyUplod(mediaName, mediaMeta, uint64(fileSize))
 	if requestID != "" {
 		requestIDSet = append(requestIDSet, requestID)
 	}
@@ -226,7 +231,6 @@ func (m MediaAssetClient) UploadFile(filePath, mediaName string, MediaMeta reque
 		err = errors.New("UploadFile error in UploadPart: " + err.Error())
 		return media, requestIDSet, err
 	}
-
 	// 第三步, 确认上传
 	reqID, e := m.commitUpload(mediaID, bucket, key, uploadID)
 	if reqID != "" {
@@ -250,5 +254,6 @@ func (m MediaAssetClient) UploadFile(filePath, mediaName string, MediaMeta reque
 		err = errors.New("UploadFile error, DescribeMediaDetails return null mediaiInfo")
 		return media, requestIDSet, err
 	}
+	fmt.Println("Uploadfile success, timecost: ", tick.Tick(), "ms")
 	return mediaSet[0], requestIDSet, err
 }

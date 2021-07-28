@@ -2,5 +2,7 @@ package response
 
 // CommitUploadResponse
 type CommitUploadResponse struct {
-	CommonResponse
+	Response struct {
+		CommonResponse
+	} `json:"Response"`
 }

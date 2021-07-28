@@ -2,5 +2,7 @@ package response
 
 // ModifyExpireTimeResponse
 type ModifyExpireTimeResponse struct {
-	CommonResponse
+	Response struct {
+		CommonResponse
+	} `json:"Response"`
 }

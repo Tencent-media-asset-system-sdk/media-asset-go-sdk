@@ -6,15 +6,18 @@ import (
 	"fmt"
 
 	"github.com/Tencent-Ti/ti-sign-go/tisign"
-	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/common/utils"
+	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/common"
 	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/media_asset_service"
 	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/media_asset_service/request"
 	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/media_asset_service/response"
 )
 
 // DescribeMediaDetails 获取指定媒体集的详情
-func (m MediaAssetClient) DescribeMediaDetails(mediaIDs []uint64) (
+func (m *MediaAssetClient) DescribeMediaDetails(mediaIDs []uint64) (
 	mediaSet []*response.MediaInfo, requestID string, err error) {
+	if m.Port == 0 {
+		m.Port = 80
+	}
 	action := "DescribeMediaDetails"
 	service := "app-cdn4aowk"
 	version := "2021-02-26"
@@ -33,7 +36,7 @@ func (m MediaAssetClient) DescribeMediaDetails(mediaIDs []uint64) (
 	req.TIProjectID = uint32(m.TIProjectID)
 	req.MediaIDSet = mediaIDs
 	if m.Inner {
-		req.RequestID = utils.GenerateRandomString(32)
+		req.RequestID = common.GenerateRandomString(32)
 		req.Uin = m.InnerUserName
 		req.SubAccountUin = m.InnerUserName
 		uri = m.InnerMediaAssetEndPoint + "/" + action
@@ -47,7 +50,7 @@ func (m MediaAssetClient) DescribeMediaDetails(mediaIDs []uint64) (
 	rsp := &response.DescribeMediaDetailsResponse{}
 	for i := 0; i < maxTry; i++ {
 		err = media_asset_service.HttpPost(uri, header, req, rsp)
-		if rsp.ApiError != nil {
+		if rsp.Response.ApiError != nil {
 			bys, _ := json.Marshal(rsp)
 			err = errors.New("Response error: " + string(bys))
 		}
@@ -55,5 +58,5 @@ func (m MediaAssetClient) DescribeMediaDetails(mediaIDs []uint64) (
 			break
 		}
 	}
-	return rsp.MediaInfoSet, rsp.RequestID, err
+	return rsp.Response.MediaInfoSet, rsp.Response.RequestID, err
 }

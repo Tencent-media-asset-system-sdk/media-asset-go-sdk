@@ -7,12 +7,12 @@ type Request interface {
 
 // CommonRequest
 type CommonRequest struct {
-	RequestID     string `json:"RequestId"`
-	AppID         uint64 `json:"AppID"`
-	Uin           string `json:"Uin"`
-	SubAccountUin string `json:"SubAccountUin"`
-	TIBusinessID  uint32 `json:"TIBusinessID"`
-	TIProjectID   uint32 `json:"TIProjectID"`
+	RequestID     string `json:"RequestId,omitempty"`
+	AppID         uint64 `json:"AppID,,omitempty"`
+	Uin           string `json:"Uin,,omitempty"`
+	SubAccountUin string `json:"SubAccountUin,omitempty"`
+	TIBusinessID  uint32 `json:"TIBusinessID,omitempty"`
+	TIProjectID   uint32 `json:"TIProjectID,omitempty"`
 }
 
 // GetRequestId

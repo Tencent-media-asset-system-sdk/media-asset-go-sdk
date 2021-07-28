@@ -1,6 +1,6 @@
 package response
 
-import "github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/service/request"
+import "github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/media_asset_service/request"
 
 // Response
 type Response interface {
@@ -14,7 +14,7 @@ type BaseResponse struct {
 
 // CommonResponse
 type CommonResponse struct {
-	RequestID string `json:"RequestID"`
+	RequestID string `json:"RequestID,omitempty"`
 	ApiError  *Error `json:"Error,omitempty"`
 	Error     error  `json:"-"`
 }

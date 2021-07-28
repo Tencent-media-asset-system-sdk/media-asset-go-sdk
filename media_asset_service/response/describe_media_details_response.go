@@ -2,6 +2,8 @@ package response
 
 // DescribeMediaDetailsResponse
 type DescribeMediaDetailsResponse struct {
-	CommonResponse
-	MediaInfoSet []*MediaInfo `json:"MediaInfoSet"`
+	Response struct {
+		CommonResponse
+		MediaInfoSet []*MediaInfo `json:"MediaInfoSet"`
+	} `json:"Response"`
 }

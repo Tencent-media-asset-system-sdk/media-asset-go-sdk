@@ -16,10 +16,10 @@ type MediaAssetFunction interface {
 		media *response.MediaInfo, requestIDSet []string, err error)
 
 	// DownloadFile 通过媒体信息返回的url下载文件到本地
-	DownloadFile(url string, dir, fileName string)
+	DownloadFile(downloadURL, dir, fileName string) (err error)
 
 	// DownloadToBuf 通过媒体信息返回的url下载文件到内存
-	DownloadToBuf(url string) (buf []byte)
+	DownloadToBuf(downloadURL string) (buf []byte, err error)
 
 	// DescribeMedias 拉取媒体列表
 	DescribeMedias(pageNumber, pageSize int, filterBy *request.FilterBy) (
@@ -32,7 +32,7 @@ type MediaAssetFunction interface {
 	RemoveMedias(mediaIDs []uint64) (failedMediaSet []*response.FailedMediaInfo, requestID string, err error)
 
 	// DescribeCategories 返回可选媒体类型列表
-	DescribeCategories() (categortSet []*response.DescribeCategoriesResponse, requestID string, err error)
+	DescribeCategories() (categortSet *response.DescribeCategoriesResponse, requestID string, err error)
 
 	// ModifyMedia 修改媒体信息
 	ModifyMedia(mediaID uint64, mediaTag, mediaSecondTag string) (requestID string, err error)
@@ -43,17 +43,18 @@ type MediaAssetFunction interface {
 
 // sdk客户端
 type MediaAssetClient struct {
-	Host                          string
-	Port                          int
-	SecretID                      string
-	SecretKey                     string
-	TIProjectID                   int
-	TIBusinessID                  int
-	Inner                         bool
-	InnerMediaAssetEndPoint       string
-	InnerFileManagerEndPoint      string
-	InnerFileStaticServerEndPoint string
-	InnerUserName                 string
+	Host                     string
+	Port                     int
+	SecretID                 string
+	SecretKey                string
+	TIProjectID              int
+	TIBusinessID             int
+	Inner                    bool
+	InnerMediaAssetEndPoint  string
+	InnerFileManagerEndPoint string
+	InnerFileStaticEndPoint  string
+	InnerUserName            string
+	InnerDataDir             string
 }
 
 // MakeMediaAssetClient 创建一个客户端

@@ -13,7 +13,6 @@ import (
 
 // UploadPart 上传分片
 func UploadPart(header map[string]string, uri string, filebuf []byte) (*response.UploadPartResponse, error) {
-
 	rsp := &response.UploadPartResponse{}
 	req, err := http.NewRequest(http.MethodPut, uri, bytes.NewBuffer(filebuf))
 	if err != nil {
