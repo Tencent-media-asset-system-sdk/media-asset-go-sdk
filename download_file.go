@@ -26,6 +26,7 @@ func (m *MediaAssetClient) DownloadFile(downloadURL, dir, fileName string) (err 
 			return errors.New("DownloadFileInner failed, parse url failed, error: " + err.Error() + " url: " + downloadURL)
 		}
 		filePath := u.Query().Get("Key")
+		filePath = path.Join(m.InnerDataDir, filePath)
 		if filePath == "" {
 			return errors.New("DownloadFileInner failed, filePath is null, url: " + downloadURL)
 		}
@@ -110,7 +111,7 @@ func (m *MediaAssetClient) DownloadToBuf(downloadURL string) (buf []byte, err er
 	uri := ""
 	header := map[string]string{}
 	if m.Inner {
-		uri = fmt.Sprintf("http://%s%s", m.InnerFileStaticEndPoint, downloadURL)
+		uri = fmt.Sprintf("%s%s", m.InnerFileStaticEndPoint, downloadURL)
 		header["Content-Type"] = "application/octet-stream"
 	} else {
 		uri = fmt.Sprintf("http://%s:%d%s", m.Host, m.Port, downloadURL)
@@ -118,6 +119,7 @@ func (m *MediaAssetClient) DownloadToBuf(downloadURL string) (buf []byte, err er
 		header, _ = ts.CreateSignatureInfo()
 	}
 	maxTry := 5
+	fmt.Println(uri)
 	for i := 0; i < maxTry; i++ {
 		req, e := http.NewRequest("GET", uri, nil)
 		if e != nil {

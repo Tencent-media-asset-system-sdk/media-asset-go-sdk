@@ -140,7 +140,7 @@ func (m MediaAssetClient) doUpload(filePath, key, bucket, uploadID string, corou
 		uri := ""
 		header := map[string]string{}
 		if m.Inner {
-			uri = fmt.Sprintf("http://%s/UploadPart?%s", m.InnerFileManagerEndPoint, canonicalQueryString)
+			uri = fmt.Sprintf("%s/UploadPart?%s", m.InnerFileManagerEndPoint, canonicalQueryString)
 			header = nil
 		} else {
 			uri = fmt.Sprintf("http://%s:%d/FileManager/UploadPart?%s", m.Host, m.Port, canonicalQueryString)

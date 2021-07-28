@@ -30,6 +30,12 @@ func main() {
 	flag.StringVar(&mediaLang, "lang", "0", "0 普通话, 1 粤语")
 	flag.Parse()
 	client := mediaassetsdk.MakeMediaAssetClient(host, port, secretID, secretKey, project, business)
+	// client.Inner = true
+	// client.InnerUserName = "superadmin"
+	// client.InnerMediaAssetEndPoint = "http://media-asset-service.ai-media.svc.cluster.local:8765"
+	// client.InnerDataDir = "/data/ti-platform-fs/ti-file-server"
+	// client.InnerFileManagerEndPoint = "http://ti-file-manager.ti-base.svc.cluster.local:55325"
+	// client.InnerFileStaticEndPoint = "http://ti-static-file-server.ti-base.svc.cluster.local:55326"
 	mediaMeta := request.MediaMeta{
 		MediaType:      mediaType,
 		MediaTag:       mediaTag,
@@ -53,11 +59,12 @@ func main() {
 		fmt.Println("DownloadFile failed, error: ", err)
 		return
 	}
-	// _, err = client.DownloadToBuf(media.DownLoadURL)
+	// buf, err := client.DownloadToBuf(media.DownLoadURL)
 	// if err != nil {
 	// 	fmt.Println("DownloadToBuf failed, error: ", err)
 	// 	return
 	// }
+	// fmt.Println(string(buf))
 	// response, reqID, err := client.DescribeCategories()
 	// if err != nil {
 	// 	fmt.Println("DescribeCategories failed, error: ", err, ", reqID: ", reqID)
