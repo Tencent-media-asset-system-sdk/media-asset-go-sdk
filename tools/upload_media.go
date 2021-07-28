@@ -76,12 +76,12 @@ func main() {
 	// 	return
 	// }
 
-	mediaSet, tot, reqID, err := client.DescribeMedias(1, 20, &request.FilterBy{MediaNameOrID: mediaName})
-	if err != nil {
-		fmt.Println("DescribeMedias failed, error: ", err, " reqID: ", reqID)
-		return
-	}
-	bys, _ = json.MarshalIndent(mediaSet, "", "    ")
-	fmt.Println(string(bys))
-	fmt.Println("total: ", tot)
+	// mediaSet, tot, reqID, err := client.DescribeMedias(1, 20, &request.FilterBy{MediaNameOrID: mediaName})
+	// if err != nil {
+	// 	fmt.Println("DescribeMedias failed, error: ", err, " reqID: ", reqID)
+	// 	return
+	// }
+	// bys, _ = json.MarshalIndent(mediaSet, "", "    ")
+	// fmt.Println(string(bys))
+	// fmt.Println("total: ", tot)
 }

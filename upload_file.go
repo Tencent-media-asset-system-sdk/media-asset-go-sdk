@@ -180,8 +180,6 @@ func (m MediaAssetClient) doUpload(filePath, key, bucket, uploadID string, corou
 		if n == 0 {
 			break
 		}
-		// 如下代码打印出每次读取的文件块(字节数)
-		fmt.Println("Read file block length: ", n)
 		wg.Add(1)
 		filebuf := make([]byte, n)
 		copy(filebuf, buffer)
@@ -254,6 +252,6 @@ func (m *MediaAssetClient) UploadFile(filePath, mediaName string, mediaMeta requ
 		err = errors.New("UploadFile error, DescribeMediaDetails return null mediaiInfo")
 		return media, requestIDSet, err
 	}
-	fmt.Println("Uploadfile success, timecost: ", tick.Tick(), "ms")
+	fmt.Println("Uploadfile success, timecost: ", tick.Tick()/1000, "s")
 	return mediaSet[0], requestIDSet, err
 }
