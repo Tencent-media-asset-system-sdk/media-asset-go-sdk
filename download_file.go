@@ -113,6 +113,7 @@ func (m *MediaAssetClient) DownloadToBuf(downloadURL string) (buf []byte, err er
 	if m.Inner {
 		uri = fmt.Sprintf("%s%s", m.InnerFileStaticEndPoint, downloadURL)
 		header["Content-Type"] = "application/octet-stream"
+		header["X-TC-Uin"] = m.InnerUserName
 	} else {
 		uri = fmt.Sprintf("http://%s:%d%s", m.Host, m.Port, downloadURL)
 		ts := tisign.NewTiSign(headerContent, m.SecretID, m.SecretKey)
