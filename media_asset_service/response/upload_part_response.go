@@ -7,3 +7,12 @@ type UploadPartResponse struct {
 		ETag string `json:"ETag"`
 	} `json:"Response"`
 }
+
+// PutObjectResponse
+type PutObjectResponse struct {
+	Response struct {
+		CommonResponse
+		Key  string `json:"Key"`
+		ETag string `json:"ETag"`
+	} `json:"Response"`
+}
