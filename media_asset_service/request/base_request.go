@@ -26,7 +26,7 @@ type MediaMeta struct {
 	MediaType      string `json:"MediaType" validate:"required"`
 	MediaTag       string `json:"MediaTag" validate:"required"`
 	MediaSecondTag string `json:"MediaSecondTag"`
-	MediaLang      string `json:"MediaLang"` // 0 普通话, 1 粤语
+	MediaLang      string `json:"MediaLang"` // 普通话, 粤语
 }
 
 // FilterBy

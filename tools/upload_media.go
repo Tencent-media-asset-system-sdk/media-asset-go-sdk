@@ -27,7 +27,7 @@ func main() {
 	flag.StringVar(&mediaType, "type", "视频", "媒体类型[视频、图片、音频]")
 	flag.StringVar(&mediaTag, "tag", "新闻", "媒体标签[新闻、综艺、体育、电影、电视剧、专题、互联网资讯]")
 	flag.StringVar(&mediaSecondTag, "second_tag", "", "媒体二级标签[晚会、其他]")
-	flag.StringVar(&mediaLang, "lang", "0", "0 普通话, 1 粤语")
+	flag.StringVar(&mediaLang, "lang", "普通话", "普通话 or 粤语")
 	flag.Parse()
 	client := mediaassetsdk.MakeMediaAssetClient(host, port, secretID, secretKey, project, business)
 	// client.Inner = true
