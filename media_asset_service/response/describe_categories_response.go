@@ -8,5 +8,6 @@ type DescribeCategoriesResponse struct {
 		CommonResponse
 		CategorySet []*request.Category `json:"CategorySet"`
 		LabelSet    []*request.Label    `json:"LabelSet"`
+		LangSet     []string            `json:"LangSet"`
 	} `json:"Response"`
 }

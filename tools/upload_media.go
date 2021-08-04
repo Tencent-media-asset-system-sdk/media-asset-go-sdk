@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"path"
 	"strings"
 
@@ -47,7 +48,8 @@ func main() {
 		fileSuffix := path.Ext(filenameWithSuffix) //获取文件后缀
 		mediaName = strings.TrimSuffix(filenameWithSuffix, fileSuffix)
 	}
-	media, reqSet, err := client.UploadFile(filePath, mediaName, mediaMeta, coroutineNum)
+	filebuf, _ := ioutil.ReadFile(filePath)
+	media, reqSet, err := client.UploadBuf(filebuf, mediaName, mediaMeta, coroutineNum)
 	if err != nil {
 		fmt.Println("Upload failed, error: ", err, " RequestIDSet: ", reqSet)
 		return
@@ -59,36 +61,36 @@ func main() {
 		fmt.Println("DownloadFile failed, error: ", err)
 		return
 	}
-	// buf, err := client.DownloadToBuf(media.DownLoadURL)
-	// if err != nil {
-	// 	fmt.Println("DownloadToBuf failed, error: ", err)
-	// 	return
-	// }
-	// fmt.Println(string(buf))
-	// response, reqID, err := client.DescribeCategories()
-	// if err != nil {
-	// 	fmt.Println("DescribeCategories failed, error: ", err, ", reqID: ", reqID)
-	// 	return
-	// }
-	// bys, _ = json.MarshalIndent(response, "", "    ")
-	// fmt.Println("DescribeCategories: ", string(bys))
+	buf, err := client.DownloadToBuf(media.DownLoadURL)
+	if err != nil {
+		fmt.Println("DownloadToBuf failed, error: ", err)
+		return
+	}
+	fmt.Println(string(buf))
+	response, reqID, err := client.DescribeCategories()
+	if err != nil {
+		fmt.Println("DescribeCategories failed, error: ", err, ", reqID: ", reqID)
+		return
+	}
+	bys, _ = json.MarshalIndent(response, "", "    ")
+	fmt.Println("DescribeCategories: ", string(bys))
 
-	// if reqID, err := client.ModifyMedia(media.MediaID, "综艺", "晚会"); err != nil {
-	// 	fmt.Println("ModifyMedia failed, error: ", err, " reqID: ", reqID)
-	// 	return
-	// }
+	if reqID, err := client.ModifyMedia(media.MediaID, "综艺", "晚会"); err != nil {
+		fmt.Println("ModifyMedia failed, error: ", err, " reqID: ", reqID)
+		return
+	}
 
-	// if reqID, err := client.ModifyExpireTime(media.MediaID, 1); err != nil {
-	// 	fmt.Println("ModifyExpireTime failed, error: ", err, " reqID: ", reqID)
-	// 	return
-	// }
+	if reqID, err := client.ModifyExpireTime(media.MediaID, 1); err != nil {
+		fmt.Println("ModifyExpireTime failed, error: ", err, " reqID: ", reqID)
+		return
+	}
 
-	// mediaSet, tot, reqID, err := client.DescribeMedias(1, 20, &request.FilterBy{MediaNameOrID: mediaName})
-	// if err != nil {
-	// 	fmt.Println("DescribeMedias failed, error: ", err, " reqID: ", reqID)
-	// 	return
-	// }
-	// bys, _ = json.MarshalIndent(mediaSet, "", "    ")
-	// fmt.Println(string(bys))
-	// fmt.Println("total: ", tot)
+	mediaSet, tot, reqID, err := client.DescribeMedias(1, 20, &request.FilterBy{MediaNameOrID: mediaName})
+	if err != nil {
+		fmt.Println("DescribeMedias failed, error: ", err, " reqID: ", reqID)
+		return
+	}
+	bys, _ = json.MarshalIndent(mediaSet, "", "    ")
+	fmt.Println(string(bys))
+	fmt.Println("total: ", tot)
 }
