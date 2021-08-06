@@ -260,7 +260,6 @@ func (m MediaAssetClient) doUploadBuf(buf []byte, key, bucket, uploadID string, 
 // mediaInfo request.MediaMeta 媒体的类型和标签信息
 func (m *MediaAssetClient) UploadFile(filePath, mediaName string, mediaMeta request.MediaMeta, coroutineNum int) (
 	media *response.MediaInfo, requestIDSet []string, err error) {
-	tick := common.BuildTimeTick()
 	if m.Port == 0 {
 		m.Port = 80
 	}
@@ -313,7 +312,9 @@ func (m *MediaAssetClient) UploadFile(filePath, mediaName string, mediaMeta requ
 		err = errors.New("UploadFile error, DescribeMediaDetails return null mediaiInfo")
 		return media, requestIDSet, err
 	}
-	fmt.Println("Uploadfile success, timecost: ", tick.Tick()/1000, "s")
+	if mediaSet[0].Status != "上传完成" && mediaSet[0].Status != "验证素材中" {
+		err = errors.New("素材错误, " + mediaSet[0].FailedReason)
+	}
 	return mediaSet[0], requestIDSet, err
 }
 
@@ -323,7 +324,6 @@ func (m *MediaAssetClient) UploadFile(filePath, mediaName string, mediaMeta requ
 // mediaInfo request.MediaMeta 媒体的类型和标签信息
 func (m *MediaAssetClient) UploadBuf(buf []byte, mediaName string, mediaMeta request.MediaMeta, coroutineNum int) (
 	media *response.MediaInfo, requestIDSet []string, err error) {
-	tick := common.BuildTimeTick()
 	if m.Port == 0 {
 		m.Port = 80
 	}
@@ -372,6 +372,8 @@ func (m *MediaAssetClient) UploadBuf(buf []byte, mediaName string, mediaMeta req
 		err = errors.New("UploadFile error, DescribeMediaDetails return null mediaiInfo")
 		return media, requestIDSet, err
 	}
-	fmt.Println("Uploadfile success, timecost: ", tick.Tick()/1000, "s")
+	if mediaSet[0].Status != "上传完成" && mediaSet[0].Status != "验证素材中" {
+		err = errors.New("素材错误, " + mediaSet[0].FailedReason)
+	}
 	return mediaSet[0], requestIDSet, err
 }

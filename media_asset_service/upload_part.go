@@ -43,6 +43,12 @@ func UploadPart(header map[string]string, uri string, filebuf []byte) (*response
 		errstr := fmt.Sprintf("[%s]UploadPart response protocol error %s", uri, err.Error())
 		return nil, errors.New(errstr)
 	}
+	if rsp.Response.ApiError != nil {
+		return nil, errors.New("UploadPart response error: " + string(data))
+	}
+	if rsp.Response.ETag == "" {
+		return nil, errors.New("UploadPart response null ETag: " + string(data))
+	}
 	return rsp, nil
 }
 
