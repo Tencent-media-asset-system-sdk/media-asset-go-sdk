@@ -70,7 +70,7 @@ func (m *MediaAssetClient) DownloadFile(downloadURL, dir, fileName string) (err 
 		if res.StatusCode != 200 {
 			return errors.New("DownloadFile " + uri + " failed! " + res.Status)
 		}
-		if res.Header.Get("X-TiGateway-Upstream-Status") != "200" {
+		if res.Header.Get("X-TiGateway-Upstream-Status") != "200" && res.Header.Get("X-TiGateway-Upstream-Status") != "" {
 			return errors.New("DownloadToBuf " + uri + " failed! " + res.Header.Get("X-TiGateway-Upstream-Status"))
 		}
 		if err := os.MkdirAll(dir, 0766); err != nil {
@@ -143,7 +143,7 @@ func (m *MediaAssetClient) DownloadToBuf(downloadURL string) (buf []byte, err er
 			err = errors.New("DownloadToBuf " + uri + " failed! " + res.Status)
 			continue
 		}
-		if res.Header.Get("X-TiGateway-Upstream-Status") != "200" {
+		if res.Header.Get("X-TiGateway-Upstream-Status") != "200" && res.Header.Get("X-TiGateway-Upstream-Status") != "" {
 			err = errors.New("DownloadToBuf " + uri + " failed! " + res.Header.Get("X-TiGateway-Upstream-Status"))
 			continue
 		}
