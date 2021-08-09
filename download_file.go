@@ -142,12 +142,12 @@ func (m *MediaAssetClient) DownloadToBuf(downloadURL string) (buf []byte, err er
 		}
 		defer res.Body.Close()
 		buf, err = ioutil.ReadAll(res.Body)
-		if err == nil && len(buf) > 0 {
-			break
-		}
 		data := gjson.ParseBytes(buf)
 		if data.Get("Response.Error").Exists() {
 			err = errors.New("DownloadToBuf " + uri + " failed! response error, data: " + string(buf))
+		}
+		if err == nil && len(buf) > 0 {
+			break
 		}
 	}
 	if err != nil {
