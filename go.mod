@@ -9,6 +9,7 @@ require (
 	github.com/panjf2000/ants/v2 v2.4.6
 	github.com/rs/zerolog v1.23.0
 	github.com/stretchr/testify v1.7.0 // indirect
+	github.com/tidwall/gjson v1.8.1
 	golang.org/x/tools v0.1.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect

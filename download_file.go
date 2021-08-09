@@ -12,6 +12,7 @@ import (
 	"strconv"
 
 	"github.com/Tencent-Ti/ti-sign-go/tisign"
+	"github.com/tidwall/gjson"
 )
 
 // DownloadFile 通过媒体信息返回的url下载文件到本地
@@ -68,10 +69,6 @@ func (m *MediaAssetClient) DownloadFile(downloadURL, dir, fileName string) (err 
 		}
 		if res.StatusCode != 200 {
 			return errors.New("DownloadFile " + uri + " failed! " + res.Status)
-		}
-		if res.Header.Get("Content-Type") == "application/json" {
-			data, _ := ioutil.ReadAll(res.Body)
-			err = errors.New("DownloadToBuf " + uri + " failed! response json data when download, data: " + string(data))
 		}
 		if err := os.MkdirAll(dir, 0766); err != nil {
 			return errors.New("DownloadFile " + uri + " failed! " + err.Error())
@@ -148,8 +145,9 @@ func (m *MediaAssetClient) DownloadToBuf(downloadURL string) (buf []byte, err er
 		if err == nil && len(buf) > 0 {
 			break
 		}
-		if res.Header.Get("Content-Type") == "application/json" {
-			err = errors.New("DownloadToBuf " + uri + " failed! response json data when download, data: " + string(buf))
+		data := gjson.ParseBytes(buf)
+		if data.Get("Response.Error").Exists() {
+			err = errors.New("DownloadToBuf " + uri + " failed! response error, data: " + string(buf))
 		}
 	}
 	if err != nil {
