@@ -70,6 +70,9 @@ func (m *MediaAssetClient) DownloadFile(downloadURL, dir, fileName string) (err 
 		if res.StatusCode != 200 {
 			return errors.New("DownloadFile " + uri + " failed! " + res.Status)
 		}
+		if res.Header.Get("X-TiGateway-Upstream-Status") != "200" {
+			return errors.New("DownloadToBuf " + uri + " failed! " + res.Header.Get("X-TiGateway-Upstream-Status"))
+		}
 		if err := os.MkdirAll(dir, 0766); err != nil {
 			return errors.New("DownloadFile " + uri + " failed! " + err.Error())
 		}
@@ -140,11 +143,17 @@ func (m *MediaAssetClient) DownloadToBuf(downloadURL string) (buf []byte, err er
 			err = errors.New("DownloadToBuf " + uri + " failed! " + res.Status)
 			continue
 		}
+		if res.Header.Get("X-TiGateway-Upstream-Status") != "200" {
+			err = errors.New("DownloadToBuf " + uri + " failed! " + res.Header.Get("X-TiGateway-Upstream-Status"))
+			continue
+		}
 		defer res.Body.Close()
 		buf, err = ioutil.ReadAll(res.Body)
-		data := gjson.ParseBytes(buf)
-		if data.Get("Response.Error").Exists() {
-			err = errors.New("DownloadToBuf " + uri + " failed! response error, data: " + string(buf))
+		if len(buf) <= 1000 {
+			data := gjson.ParseBytes(buf)
+			if data.Get("Response.Error").Exists() {
+				err = errors.New("DownloadToBuf " + uri + " failed! response error, data: " + string(buf))
+			}
 		}
 		if err == nil && len(buf) > 0 {
 			break
