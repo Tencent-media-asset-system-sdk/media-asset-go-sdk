@@ -5,7 +5,7 @@
 
 ## 构建客户端
 
-所有的方法都封装在 `com.mediaassetsdk.MediaAssetClient`。构造一个`MediaAssetClient`的方法如下
+所有的方法都封装在 `mediaassetsdk.MediaAssetClient`。构造一个`MediaAssetClient`的方法如下
 
 ```go
 import (
