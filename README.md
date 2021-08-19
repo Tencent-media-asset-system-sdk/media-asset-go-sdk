@@ -1,4 +1,4 @@
-# media-asset-java-sdk
+# media-asset-go-sdk
 
 此SDK用于在go语言中中方便的向媒体管理系统上传媒体资源。使用此SDK之前请先参考相关的API接口文档。
 
