@@ -40,7 +40,7 @@ import "github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/media_asset
 
 filePath := "data/test.mp4" // 文件路径
 mediaName := "test视频" // 媒体名称
-mediaType := 视频" // 媒体类型, 可选 视频，音频，图片
+mediaType := "视频" // 媒体类型, 可选 视频，音频，图片
 mediaTag := "新闻" // 媒体标签, 可选 新闻, 综艺, 电影, 电视剧, 体育, 专题, 互联网资讯
 mediaSecondTag := "" // 二级标签，如果一级标签为综艺可选 "晚会" 和 "其他"，其他为空
 mediaLang := "普通话" // 可选 普通话, 粤语
