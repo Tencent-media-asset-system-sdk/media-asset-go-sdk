@@ -52,7 +52,7 @@ mediaMeta := request.MediaMeta{
   MediaLang:      mediaLang,
 }
 
-// 直接上传文件
+// 上传文件到媒体管理系统
 media, reqSet, err := client.UploadFile(filePath, mediaName, mediaMeta, coroutineNum)
 // media 上传成功后的媒体信息 *response.MediaInfo 结构
 if err != nil {
@@ -62,7 +62,7 @@ if err != nil {
   fmt.Println("Upload success, media: ", string(bys))
 }
 
-// 上传内存
+// 上传内存到媒体管理系统
 filebuf, err := ioutil.ReadFile(filePath)
 if err != nil {
   media, reqSet, err := client.UploadBuf(filebuf, mediaName, mediaMeta, coroutineNum)
@@ -79,14 +79,14 @@ medias, reqID, err := client.DescribeMediaDetails([]uint64{media.MediaID})
 
 ## 下载媒体
 ```go
-// 下载到文件
+// 下载媒体到文件
 dir := "./data" // 下载到的目录
 fileName := "download.mp4" // 下载的文件名
 if err := client.DownloadFile(media.DownLoadURL, dir, fileName); err != nil {
   fmt.Println("DownloadFile failed, error: ", err)
 }
 
-// 下载文件到内存
+// 下载媒体到内存
 buf, err := client.DownloadToBuf(media.DownLoadURL)
 if err != nil {
   fmt.Println("DownloadToBuf failed, error: ", err)
