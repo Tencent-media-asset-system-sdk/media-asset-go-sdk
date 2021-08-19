@@ -121,7 +121,7 @@ day := 1 // 媒体过期时间
 reqID, err := client.ModifyExpireTime(media.MediaID, day)
 ```
 
-# 工具
+## 工具
 上传单个媒体工具
 
 go run
