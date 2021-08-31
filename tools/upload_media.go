@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"path"
 	"strings"
-
+	"io/ioutil"
 	mediaassetsdk "github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk"
 	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/media_asset_service/request"
 )
@@ -47,7 +47,10 @@ func main() {
 		fileSuffix := path.Ext(filenameWithSuffix) //获取文件后缀
 		mediaName = strings.TrimSuffix(filenameWithSuffix, fileSuffix)
 	}
-	media, reqSet, err := client.UploadFile(filePath, mediaName, mediaMeta, coroutineNum)
+	buf, _ := ioutil.ReadFile(filePath)
+	media, reqSet, err := client.UploadBuf(buf, mediaName, mediaMeta, coroutineNum)
+	
+
 	if err != nil {
 		fmt.Println("Upload failed, error: ", err, " RequestIDSet: ", reqSet)
 		return
