@@ -15,6 +15,7 @@ import (
 // ModifyExpireTime 修改文件过期时间，当前时间算起来，有效时间为 days 天
 func (m *MediaAssetClient) CreateMedias(req *request.CreateMediasRequest) (
 	rsp *response.CreateMediasResponse, err error) {
+	rsp = &response.CreateMediasResponse{}
 	if m.Port == 0 {
 		m.Port = 80
 	}

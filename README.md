@@ -115,10 +115,45 @@ newTag := ""综艺" // 新标签
 newSeconeTag := "晚会" // 新二级标签
 reqID, err := client.ModifyMedia(media.MediaID, newTag, newSeconeTag);
 ```
+
 ## 修改媒体过期时间
-```java
+```go
 day := 1 // 媒体过期时间
 reqID, err := client.ModifyExpireTime(media.MediaID, day)
+```
+
+## 批量创建媒体
+```go
+req := request.CreateMediasRequest{}
+req.UploadMediaSet = append(req.UploadMediaSet, request.UploadMedia{
+  Name:     "直播流测试1",
+  MediaURL: "http://live.tencent.com",
+  MediaMeta: request.MediaMeta{
+    MediaType: "直播流",
+    MediaTag:  "新闻",
+  },
+})
+req.UploadMediaSet = append(req.UploadMediaSet, request.UploadMedia{
+  Name:     "测试2",
+  MediaURL: "http://video.tencent.com",
+  MediaMeta: request.MediaMeta{
+    MediaType: "视频",
+    MediaTag:  "新闻",
+  },
+})
+req.UploadMediaSet = append(req.UploadMediaSet, request.UploadMedia{
+  Name:     "测试2",
+  LocalPath: "/data/test.mp4",
+  MediaMeta: request.MediaMeta{
+    MediaType: "视频",
+    MediaTag:  "新闻",
+  },
+})
+rsp, err := client.CreateMedias(&req)
+if err == nil && rsp.Response.ApiError == nil {
+  bys, _ := json.Marshal(rsp)
+  fmt.Println(string(bys))
+}
 ```
 
 ## 工具
