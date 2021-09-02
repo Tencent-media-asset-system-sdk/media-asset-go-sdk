@@ -4,13 +4,14 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"encoding/json"
-	"io/ioutil"
 	"errors"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"strconv"
 	"sync"
+	"time"
 
 	"github.com/Tencent-Ti/ti-sign-go/tisign"
 	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/common"
@@ -59,6 +60,7 @@ func (m MediaAssetClient) applyUplod(mediaName string, mediaMeta request.MediaMe
 		header, _ = ts.CreateSignatureInfo()
 	}
 	maxTry := 3
+	timeSleep := 50 * time.Millisecond
 	rsp := &response.ApplyUploadResponse{}
 	for i := 0; i < maxTry; i++ {
 		err = mediaassetservice.HttpPost(uri, header, req, rsp)
@@ -69,6 +71,8 @@ func (m MediaAssetClient) applyUplod(mediaName string, mediaMeta request.MediaMe
 		if err == nil {
 			break
 		}
+		time.Sleep(timeSleep)
+		timeSleep *= 2
 	}
 	return rsp.Response.MediaID, rsp.Response.Bucket, rsp.Response.Key,
 		rsp.Response.UploadId, rsp.Response.RequestID, err
@@ -111,6 +115,7 @@ func (m MediaAssetClient) commitUpload(mediaID uint64, bucket, key, uploadID str
 	}
 	maxTry := 3
 	rsp := &response.CommitUploadResponse{}
+	timeSleep := 50 * time.Millisecond
 	for i := 0; i < maxTry; i++ {
 		err = mediaassetservice.HttpPost(uri, header, req, rsp)
 		if rsp.Response.ApiError != nil {
@@ -120,6 +125,8 @@ func (m MediaAssetClient) commitUpload(mediaID uint64, bucket, key, uploadID str
 		if err == nil {
 			break
 		}
+		time.Sleep(timeSleep)
+		timeSleep *= 2
 		fmt.Println("Commit try ", i+1, " error: ", err.Error())
 	}
 	return rsp.Response.RequestID, err
@@ -157,11 +164,14 @@ func (m MediaAssetClient) doUpload(filePath, key, bucket, uploadID string, corou
 			header, _ = ts.CreateSignatureInfo()
 		}
 		maxTry := 5
+		timeSleep := 50 * time.Millisecond
 		for i := 0; i < maxTry; i++ {
 			_, err = mediaassetservice.UploadPart(header, uri, filebuf)
 			if err == nil {
 				break
 			}
+			time.Sleep(timeSleep)
+			timeSleep *= 2
 		}
 		wg.Done()
 	})
@@ -190,7 +200,7 @@ func (m MediaAssetClient) doUpload(filePath, key, bucket, uploadID string, corou
 		} else {
 			uri = fmt.Sprintf("http://%s:%d/FileManager/PutObject?%s", m.Host, m.Port, canonicalQueryString)
 			headerContent := tisign.HttpHeaderContent{
-				XTCAction:   "PutObject",               // 请求接口
+				XTCAction:   "PutObject",                // 请求接口
 				XTCService:  "app-cdn4aowk",             // 接口所属服务名
 				XTCVersion:  "2021-02-26",               // 接口版本
 				ContentType: "application/octet-stream", // http请求的content-type, 当前网关只支持: application/json  multipart/form-data
@@ -200,11 +210,14 @@ func (m MediaAssetClient) doUpload(filePath, key, bucket, uploadID string, corou
 			ts := tisign.NewTiSign(headerContent, m.SecretID, m.SecretKey)
 			header, _ = ts.CreateSignatureInfo()
 			maxTry := 5
+			timeSleep := 50 * time.Millisecond
 			for i := 0; i < maxTry; i++ {
 				_, err = mediaassetservice.PutObject(header, uri, filebuf)
 				if err == nil {
 					break
 				}
+				time.Sleep(timeSleep)
+				timeSleep *= 2
 			}
 			return err
 		}
@@ -266,11 +279,14 @@ func (m MediaAssetClient) doUploadBuf(buf []byte, key, bucket, uploadID string, 
 			header, _ = ts.CreateSignatureInfo()
 		}
 		maxTry := 5
+		timeSleep := 50 * time.Millisecond
 		for i := 0; i < maxTry; i++ {
 			_, err = mediaassetservice.UploadPart(header, uri, filebuf)
 			if err == nil {
 				break
 			}
+			time.Sleep(timeSleep)
+			timeSleep *= 2
 		}
 		wg.Done()
 	})
@@ -289,7 +305,7 @@ func (m MediaAssetClient) doUploadBuf(buf []byte, key, bucket, uploadID string, 
 		} else {
 			uri = fmt.Sprintf("http://%s:%d/FileManager/PutObject?%s", m.Host, m.Port, canonicalQueryString)
 			headerContent := tisign.HttpHeaderContent{
-				XTCAction:   "PutObject",               // 请求接口
+				XTCAction:   "PutObject",                // 请求接口
 				XTCService:  "app-cdn4aowk",             // 接口所属服务名
 				XTCVersion:  "2021-02-26",               // 接口版本
 				ContentType: "application/octet-stream", // http请求的content-type, 当前网关只支持: application/json  multipart/form-data
@@ -299,11 +315,14 @@ func (m MediaAssetClient) doUploadBuf(buf []byte, key, bucket, uploadID string, 
 			ts := tisign.NewTiSign(headerContent, m.SecretID, m.SecretKey)
 			header, _ = ts.CreateSignatureInfo()
 			maxTry := 5
+			timeSleep := 50 * time.Millisecond
 			for i := 0; i < maxTry; i++ {
 				_, err = mediaassetservice.PutObject(header, uri, buf)
 				if err == nil {
 					break
 				}
+				time.Sleep(timeSleep)
+				timeSleep *= 2
 			}
 			return err
 		}

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/Tencent-Ti/ti-sign-go/tisign"
 	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/common"
@@ -50,6 +51,7 @@ func (m *MediaAssetClient) ModifyMedia(mediaID uint64, mediaTag, mediaSecondTag 
 		header, _ = ts.CreateSignatureInfo()
 	}
 	maxTry := 3
+	timeSleep := 50 * time.Millisecond
 	rsp := &response.ModifyExpireTimeResponse{}
 	for i := 0; i < maxTry; i++ {
 		err = mediaassetservice.HttpPost(uri, header, req, rsp)
@@ -60,6 +62,8 @@ func (m *MediaAssetClient) ModifyMedia(mediaID uint64, mediaTag, mediaSecondTag 
 		if err == nil {
 			break
 		}
+		time.Sleep(timeSleep)
+		timeSleep *= 2
 	}
 	return rsp.Response.RequestID, err
 }
