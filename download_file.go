@@ -10,6 +10,7 @@ import (
 	"os"
 	"path"
 	"strconv"
+	"time"
 
 	"github.com/Tencent-Ti/ti-sign-go/tisign"
 	"github.com/tidwall/gjson"
@@ -124,7 +125,7 @@ func (m *MediaAssetClient) DownloadToBuf(downloadURL string) (buf []byte, err er
 		header, _ = ts.CreateSignatureInfo()
 	}
 	maxTry := 5
-	fmt.Println(uri)
+	timeSleep := 50 * time.Millisecond
 	for i := 0; i < maxTry; i++ {
 		req, e := http.NewRequest("GET", uri, nil)
 		if e != nil {
@@ -158,6 +159,8 @@ func (m *MediaAssetClient) DownloadToBuf(downloadURL string) (buf []byte, err er
 		if err == nil && len(buf) > 0 {
 			break
 		}
+		time.Sleep(timeSleep)
+		timeSleep *= 2
 	}
 	if err != nil {
 		return nil, err

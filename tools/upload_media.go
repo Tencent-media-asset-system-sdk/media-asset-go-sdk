@@ -48,6 +48,7 @@ func main() {
 		mediaName = strings.TrimSuffix(filenameWithSuffix, fileSuffix)
 	}
 	media, reqSet, err := client.UploadFile(filePath, mediaName, mediaMeta, coroutineNum)
+
 	if err != nil {
 		fmt.Println("Upload failed, error: ", err, " RequestIDSet: ", reqSet)
 		return

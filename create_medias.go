@@ -13,13 +13,14 @@ import (
 	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/media_asset_service/response"
 )
 
-// ModifyMedia 修改媒体信息
-func (m *MediaAssetClient) ModifyMedia(mediaID uint64, mediaTag, mediaSecondTag string) (
-	requestID string, err error) {
+// ModifyExpireTime 修改文件过期时间，当前时间算起来，有效时间为 days 天
+func (m *MediaAssetClient) CreateMedias(req *request.CreateMediasRequest) (
+	rsp *response.CreateMediasResponse, err error) {
+	rsp = &response.CreateMediasResponse{}
 	if m.Port == 0 {
 		m.Port = 80
 	}
-	action := "ModifyMedia"
+	action := "CreateMedias"
 	service := "app-cdn4aowk"
 	version := "2021-02-26"
 	headerContent := tisign.HttpHeaderContent{
@@ -32,12 +33,8 @@ func (m *MediaAssetClient) ModifyMedia(mediaID uint64, mediaTag, mediaSecondTag 
 	}
 	uri := ""
 	header := map[string]string{}
-	req := &request.ModifyMediaRequest{}
 	req.TIBusinessID = uint32(m.TIBusinessID)
 	req.TIProjectID = uint32(m.TIProjectID)
-	req.MediaID = mediaID
-	req.MediaTag = mediaTag
-	req.MediaSecondTag = mediaSecondTag
 	req.Action = action
 	if m.Inner {
 		req.RequestID = common.GenerateRandomString(32)
@@ -52,7 +49,6 @@ func (m *MediaAssetClient) ModifyMedia(mediaID uint64, mediaTag, mediaSecondTag 
 	}
 	maxTry := 3
 	timeSleep := 50 * time.Millisecond
-	rsp := &response.ModifyExpireTimeResponse{}
 	for i := 0; i < maxTry; i++ {
 		err = mediaassetservice.HttpPost(uri, header, req, rsp)
 		if rsp.Response.ApiError != nil {
@@ -65,5 +61,5 @@ func (m *MediaAssetClient) ModifyMedia(mediaID uint64, mediaTag, mediaSecondTag 
 		time.Sleep(timeSleep)
 		timeSleep *= 2
 	}
-	return rsp.Response.RequestID, err
+	return rsp, err
 }

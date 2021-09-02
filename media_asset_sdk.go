@@ -39,6 +39,9 @@ type MediaAssetFunction interface {
 
 	// ModifyExpireTime 修改文件过期时间，当前时间算起来，有效时间为 days 天
 	ModifyExpireTime(mediaID uint64, days int) (requestID string, err error)
+
+	// CreateMedias 批量创建媒体
+	CreateMedias(req *request.CreateMediasRequest) (rsp *response.CreateMediasResponse, err error)
 }
 
 // sdk客户端

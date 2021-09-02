@@ -40,6 +40,10 @@ type MediaInfo struct {
 	DownLoadURL  string `json:"DownLoadURL"`
 	Status       string `json:"Status"`
 	FailedReason string `json:"FailedReason"`
+	Bucket       string  `json:"Bucket,omitempty"`
+	Key          string  `json:"Key,,omitempty"`
+	UploadId     string  `json:"UploadId,omitempty"`
+	LocalPath    string  `json:"LocalPath,omitempty"`
 }
 
 // FailedMediaInfo

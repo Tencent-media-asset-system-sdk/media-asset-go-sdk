@@ -7,9 +7,11 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"strconv"
 	"sync"
+	"time"
 
 	"github.com/Tencent-Ti/ti-sign-go/tisign"
 	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/common"
@@ -58,6 +60,7 @@ func (m MediaAssetClient) applyUplod(mediaName string, mediaMeta request.MediaMe
 		header, _ = ts.CreateSignatureInfo()
 	}
 	maxTry := 3
+	timeSleep := 50 * time.Millisecond
 	rsp := &response.ApplyUploadResponse{}
 	for i := 0; i < maxTry; i++ {
 		err = mediaassetservice.HttpPost(uri, header, req, rsp)
@@ -68,6 +71,8 @@ func (m MediaAssetClient) applyUplod(mediaName string, mediaMeta request.MediaMe
 		if err == nil {
 			break
 		}
+		time.Sleep(timeSleep)
+		timeSleep *= 2
 	}
 	return rsp.Response.MediaID, rsp.Response.Bucket, rsp.Response.Key,
 		rsp.Response.UploadId, rsp.Response.RequestID, err
@@ -110,6 +115,7 @@ func (m MediaAssetClient) commitUpload(mediaID uint64, bucket, key, uploadID str
 	}
 	maxTry := 3
 	rsp := &response.CommitUploadResponse{}
+	timeSleep := 50 * time.Millisecond
 	for i := 0; i < maxTry; i++ {
 		err = mediaassetservice.HttpPost(uri, header, req, rsp)
 		if rsp.Response.ApiError != nil {
@@ -119,6 +125,8 @@ func (m MediaAssetClient) commitUpload(mediaID uint64, bucket, key, uploadID str
 		if err == nil {
 			break
 		}
+		time.Sleep(timeSleep)
+		timeSleep *= 2
 		fmt.Println("Commit try ", i+1, " error: ", err.Error())
 	}
 	return rsp.Response.RequestID, err
@@ -156,11 +164,14 @@ func (m MediaAssetClient) doUpload(filePath, key, bucket, uploadID string, corou
 			header, _ = ts.CreateSignatureInfo()
 		}
 		maxTry := 5
+		timeSleep := 50 * time.Millisecond
 		for i := 0; i < maxTry; i++ {
 			_, err = mediaassetservice.UploadPart(header, uri, filebuf)
 			if err == nil {
 				break
 			}
+			time.Sleep(timeSleep)
+			timeSleep *= 2
 		}
 		wg.Done()
 	})
@@ -170,27 +181,68 @@ func (m MediaAssetClient) doUpload(filePath, key, bucket, uploadID string, corou
 		return err
 	}
 	defer file.Close()
-
-	buffer := make([]byte, BloackSzie)
-	// Submit uploadpart one by one.
-	partNumber := 1
-	for {
-		n, err := file.Read(buffer)
-		if err != nil && err != io.EOF {
+	stat, err := os.Stat(filePath)
+	if err == nil && stat.Size() <= BloackSzie {
+		// 不需要分片
+		filebuf, err := ioutil.ReadAll(file)
+		if err != nil {
 			return err
 		}
-		if n == 0 {
-			break
+		h := md5.New()
+		h.Write(filebuf)
+		md5sum := hex.EncodeToString(h.Sum(nil))
+		canonicalQueryString := fmt.Sprintf("useJson=true&Bucket=%s&Key=%s&Content-MD5=%s", bucket, key, md5sum)
+		uri := ""
+		header := map[string]string{}
+		if m.Inner {
+			uri = fmt.Sprintf("%s/PutObject?%s", m.InnerFileManagerEndPoint, canonicalQueryString)
+			header = nil
+		} else {
+			uri = fmt.Sprintf("http://%s:%d/FileManager/PutObject?%s", m.Host, m.Port, canonicalQueryString)
+			headerContent := tisign.HttpHeaderContent{
+				XTCAction:   "PutObject",                // 请求接口
+				XTCService:  "app-cdn4aowk",             // 接口所属服务名
+				XTCVersion:  "2021-02-26",               // 接口版本
+				ContentType: "application/octet-stream", // http请求的content-type, 当前网关只支持: application/json  multipart/form-data
+				HttpMethod:  "PUT",                      // http请求方法，当前网关只支持: POST GET
+				Host:        m.Host,                     // 访问网关的host
+			}
+			ts := tisign.NewTiSign(headerContent, m.SecretID, m.SecretKey)
+			header, _ = ts.CreateSignatureInfo()
+			maxTry := 5
+			timeSleep := 50 * time.Millisecond
+			for i := 0; i < maxTry; i++ {
+				_, err = mediaassetservice.PutObject(header, uri, filebuf)
+				if err == nil {
+					break
+				}
+				time.Sleep(timeSleep)
+				timeSleep *= 2
+			}
+			return err
 		}
-		wg.Add(1)
-		filebuf := make([]byte, n)
-		copy(filebuf, buffer)
-		_ = pool.Invoke([]interface{}{filebuf, partNumber})
-		partNumber += 1
-	}
-	wg.Wait()
-	if err != nil {
-		return err
+	} else {
+		buffer := make([]byte, BloackSzie)
+		// Submit uploadpart one by one.
+		partNumber := 1
+		for {
+			n, err := file.Read(buffer)
+			if err != nil && err != io.EOF {
+				return err
+			}
+			if n == 0 {
+				break
+			}
+			wg.Add(1)
+			filebuf := make([]byte, n)
+			copy(filebuf, buffer)
+			_ = pool.Invoke([]interface{}{filebuf, partNumber})
+			partNumber += 1
+		}
+		wg.Wait()
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -227,29 +279,69 @@ func (m MediaAssetClient) doUploadBuf(buf []byte, key, bucket, uploadID string, 
 			header, _ = ts.CreateSignatureInfo()
 		}
 		maxTry := 5
+		timeSleep := 50 * time.Millisecond
 		for i := 0; i < maxTry; i++ {
 			_, err = mediaassetservice.UploadPart(header, uri, filebuf)
 			if err == nil {
 				break
 			}
+			time.Sleep(timeSleep)
+			timeSleep *= 2
 		}
 		wg.Done()
 	})
 	defer pool.Release()
-	// Submit uploadpart one by one.
-	partNumber := 1
-	for i := 0; i < len(buf); i += BloackSzie {
-		end := i + BloackSzie
-		if end > len(buf) {
-			end = len(buf)
+	if len(buf) <= BloackSzie {
+		fmt.Println("hhhhh")
+		h := md5.New()
+		h.Write(buf)
+		md5sum := hex.EncodeToString(h.Sum(nil))
+		canonicalQueryString := fmt.Sprintf("useJson=true&Bucket=%s&Key=%s&Content-MD5=%s", bucket, key, md5sum)
+		uri := ""
+		header := map[string]string{}
+		if m.Inner {
+			uri = fmt.Sprintf("%s/PutObject?%s", m.InnerFileManagerEndPoint, canonicalQueryString)
+			header = nil
+		} else {
+			uri = fmt.Sprintf("http://%s:%d/FileManager/PutObject?%s", m.Host, m.Port, canonicalQueryString)
+			headerContent := tisign.HttpHeaderContent{
+				XTCAction:   "PutObject",                // 请求接口
+				XTCService:  "app-cdn4aowk",             // 接口所属服务名
+				XTCVersion:  "2021-02-26",               // 接口版本
+				ContentType: "application/octet-stream", // http请求的content-type, 当前网关只支持: application/json  multipart/form-data
+				HttpMethod:  "PUT",                      // http请求方法，当前网关只支持: POST GET
+				Host:        m.Host,                     // 访问网关的host
+			}
+			ts := tisign.NewTiSign(headerContent, m.SecretID, m.SecretKey)
+			header, _ = ts.CreateSignatureInfo()
+			maxTry := 5
+			timeSleep := 50 * time.Millisecond
+			for i := 0; i < maxTry; i++ {
+				_, err = mediaassetservice.PutObject(header, uri, buf)
+				if err == nil {
+					break
+				}
+				time.Sleep(timeSleep)
+				timeSleep *= 2
+			}
+			return err
 		}
-		wg.Add(1)
-		_ = pool.Invoke([]interface{}{buf[i:end], partNumber})
-		partNumber += 1
-	}
-	wg.Wait()
-	if err != nil {
-		return err
+	} else {
+		// Submit uploadpart one by one.
+		partNumber := 1
+		for i := 0; i < len(buf); i += BloackSzie {
+			end := i + BloackSzie
+			if end > len(buf) {
+				end = len(buf)
+			}
+			wg.Add(1)
+			_ = pool.Invoke([]interface{}{buf[i:end], partNumber})
+			partNumber += 1
+		}
+		wg.Wait()
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -283,7 +375,7 @@ func (m *MediaAssetClient) UploadFile(filePath, mediaName string, mediaMeta requ
 		}
 	}()
 
-	// 第二步, 上传分片
+	// 第二步, 上传文件
 	err = m.doUpload(filePath, key, bucket, uploadID, coroutineNum)
 	if err != nil {
 		err = errors.New("UploadFile error in UploadPart: " + err.Error())
@@ -343,7 +435,7 @@ func (m *MediaAssetClient) UploadBuf(buf []byte, mediaName string, mediaMeta req
 		}
 	}()
 
-	// 第二步, 上传分片
+	// 第二步, 上传buf
 	err = m.doUploadBuf(buf, key, bucket, uploadID, coroutineNum)
 	if err != nil {
 		err = errors.New("UploadFile error in UploadPart: " + err.Error())
