@@ -209,18 +209,19 @@ func (m MediaAssetClient) doUpload(filePath, key, bucket, uploadID string, corou
 			}
 			ts := tisign.NewTiSign(headerContent, m.SecretID, m.SecretKey)
 			header, _ = ts.CreateSignatureInfo()
-			maxTry := 5
-			timeSleep := 50 * time.Millisecond
-			for i := 0; i < maxTry; i++ {
-				_, err = mediaassetservice.PutObject(header, uri, filebuf)
-				if err == nil {
-					break
-				}
-				time.Sleep(timeSleep)
-				timeSleep *= 2
-			}
-			return err
 		}
+
+		maxTry := 5
+		timeSleep := 50 * time.Millisecond
+		for i := 0; i < maxTry; i++ {
+			_, err = mediaassetservice.PutObject(header, uri, filebuf)
+			if err == nil {
+				break
+			}
+			time.Sleep(timeSleep)
+			timeSleep *= 2
+		}
+		return err
 	} else {
 		buffer := make([]byte, BloackSzie)
 		// Submit uploadpart one by one.
@@ -314,18 +315,18 @@ func (m MediaAssetClient) doUploadBuf(buf []byte, key, bucket, uploadID string, 
 			}
 			ts := tisign.NewTiSign(headerContent, m.SecretID, m.SecretKey)
 			header, _ = ts.CreateSignatureInfo()
-			maxTry := 5
-			timeSleep := 50 * time.Millisecond
-			for i := 0; i < maxTry; i++ {
-				_, err = mediaassetservice.PutObject(header, uri, buf)
-				if err == nil {
-					break
-				}
-				time.Sleep(timeSleep)
-				timeSleep *= 2
-			}
-			return err
 		}
+		maxTry := 5
+		timeSleep := 50 * time.Millisecond
+		for i := 0; i < maxTry; i++ {
+			_, err = mediaassetservice.PutObject(header, uri, buf)
+			if err == nil {
+				break
+			}
+			time.Sleep(timeSleep)
+			timeSleep *= 2
+		}
+		return err
 	} else {
 		// Submit uploadpart one by one.
 		partNumber := 1
