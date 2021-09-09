@@ -13,7 +13,7 @@ import (
 )
 
 host := "106.52.71.124" // 调用服务的的 host
-port := "" // 调用服务的的 port, 80 填空
+port := 80 // 调用服务的的 port
 secretID := "secretID" // secretID
 secretID := "secretKey" // secretKey
 businessID := 1 // 业务ID
