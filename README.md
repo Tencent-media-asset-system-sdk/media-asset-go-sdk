@@ -15,7 +15,7 @@ import (
 host := "106.52.71.124" // 调用服务的的 host
 port := 80 // 调用服务的的 port
 secretID := "secretID" // secretID
-secretID := "secretKey" // secretKey
+secretKey := "secretKey" // secretKey
 businessID := 1 // 业务ID
 projectID := 1 // 项目ID
 // TODO: config below
