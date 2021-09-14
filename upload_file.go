@@ -48,6 +48,9 @@ func (m MediaAssetClient) applyUplod(mediaName string, mediaMeta request.MediaMe
 	req.Size = strconv.FormatUint(fileSize, 10)
 	req.Inner = m.Inner
 	req.Action = action
+	if fileSize <= BloackSzie {
+		req.UsePutObject = 1
+	}
 	if m.Inner {
 		req.RequestID = common.GenerateRandomString(32)
 		req.Uin = m.InnerUserName
@@ -293,7 +296,6 @@ func (m MediaAssetClient) doUploadBuf(buf []byte, key, bucket, uploadID string, 
 	})
 	defer pool.Release()
 	if len(buf) <= BloackSzie {
-		fmt.Println("hhhhh")
 		h := md5.New()
 		h.Write(buf)
 		md5sum := hex.EncodeToString(h.Sum(nil))
