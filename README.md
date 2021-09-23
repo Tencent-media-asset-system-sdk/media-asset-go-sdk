@@ -111,7 +111,7 @@ failedMedias, reqID, err := client.RemoveMedias([]uint64{media.MediaID})
 
 ## 修改媒体类型
 ```go
-newTag := ""综艺" // 新标签
+newTag := "综艺" // 新标签
 newSeconeTag := "晚会" // 新二级标签
 reqID, err := client.ModifyMedia(media.MediaID, newTag, newSeconeTag);
 ```
