@@ -293,7 +293,6 @@ func (m MediaAssetClient) doUploadBuf(buf []byte, key, bucket, uploadID string, 
 	})
 	defer pool.Release()
 	if len(buf) <= BloackSzie {
-		fmt.Println("hhhhh")
 		h := md5.New()
 		h.Write(buf)
 		md5sum := hex.EncodeToString(h.Sum(nil))
@@ -405,7 +404,7 @@ func (m *MediaAssetClient) UploadFile(filePath, mediaName string, mediaMeta requ
 		err = errors.New("UploadFile error, DescribeMediaDetails return null mediaiInfo")
 		return media, requestIDSet, err
 	}
-	if mediaSet[0].Status != "上传完成" && mediaSet[0].Status != "验证素材中" {
+	if mediaSet[0].Status == "上传失败" {
 		err = errors.New("素材错误, " + mediaSet[0].FailedReason)
 	}
 	return mediaSet[0], requestIDSet, err
@@ -465,7 +464,7 @@ func (m *MediaAssetClient) UploadBuf(buf []byte, mediaName string, mediaMeta req
 		err = errors.New("UploadFile error, DescribeMediaDetails return null mediaiInfo")
 		return media, requestIDSet, err
 	}
-	if mediaSet[0].Status != "上传完成" && mediaSet[0].Status != "验证素材中" {
+	if mediaSet[0].Status == "上传失败" {
 		err = errors.New("素材错误, " + mediaSet[0].FailedReason)
 	}
 	return mediaSet[0], requestIDSet, err
