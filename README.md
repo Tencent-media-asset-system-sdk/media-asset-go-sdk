@@ -13,9 +13,9 @@ import (
 )
 
 host := "106.52.71.124" // 调用服务的的 host
-port := "" // 调用服务的的 port, 80 填空
+port := 80 // 调用服务的的 port
 secretID := "secretID" // secretID
-secretID := "secretKey" // secretKey
+secretKey := "secretKey" // secretKey
 businessID := 1 // 业务ID
 projectID := 1 // 项目ID
 // TODO: config below
@@ -111,7 +111,7 @@ failedMedias, reqID, err := client.RemoveMedias([]uint64{media.MediaID})
 
 ## 修改媒体类型
 ```go
-newTag := ""综艺" // 新标签
+newTag := "综艺" // 新标签
 newSeconeTag := "晚会" // 新二级标签
 reqID, err := client.ModifyMedia(media.MediaID, newTag, newSeconeTag);
 ```

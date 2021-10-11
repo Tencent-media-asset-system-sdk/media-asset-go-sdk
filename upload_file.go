@@ -48,6 +48,9 @@ func (m MediaAssetClient) applyUplod(mediaName string, mediaMeta request.MediaMe
 	req.Size = strconv.FormatUint(fileSize, 10)
 	req.Inner = m.Inner
 	req.Action = action
+	if fileSize <= BloackSzie {
+		req.UsePutObject = 1
+	}
 	if m.Inner {
 		req.RequestID = common.GenerateRandomString(32)
 		req.Uin = m.InnerUserName

@@ -92,4 +92,35 @@ func main() {
 	// bys, _ = json.MarshalIndent(mediaSet, "", "    ")
 	// fmt.Println(string(bys))
 	// fmt.Println("total: ", tot)
+
+	// req := request.CreateMediasRequest{}
+	// req.UploadMediaSet = append(req.UploadMediaSet, request.UploadMedia{
+	// 	Name:     "质检直播流测试",
+	// 	MediaURL: "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8",
+	// 	MediaMeta: request.MediaMeta{
+	// 		MediaType: "直播流",
+	// 		MediaTag:  "新闻",
+	// 	},
+	// })
+	// req.UploadMediaSet = append(req.UploadMediaSet, request.UploadMedia{
+	// 	Name:     "URL测试",
+	// 	MediaURL: "https://ai-media-1300074211.cos.ap-shanghai.myqcloud.com/ai-media/2021-04-06/8b46057e-1923-4444-b0fb-91b094bf7530_trans.mp4",
+	// 	MediaMeta: request.MediaMeta{
+	// 		MediaType: "视频",
+	// 		MediaTag:  "新闻",
+	// 	},
+	// })
+	// req.UploadMediaSet = append(req.UploadMediaSet, request.UploadMedia{
+	// 	Name:     "测试2",
+	// 	LocalPath: "/data/test.mp4",
+	// 	MediaMeta: request.MediaMeta{
+	// 		MediaType: "视频",
+	// 		MediaTag:  "新闻",
+	// 	},
+	// })
+	// rsp, err := client.CreateMedias(&req)
+	// if err == nil && rsp.Response.ApiError == nil {
+	// 	bys, _ := json.Marshal(rsp)
+	// 	fmt.Println(string(bys))
+	// }
 }

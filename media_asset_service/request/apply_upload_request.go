@@ -7,5 +7,6 @@ type ApplyUploadRequest struct {
 	MediaMeta  MediaMeta `json:"MediaMeta" validate:"required,dive"`
 	Size       string    `json:"Size" validate:"required"`
 	ContentMD5 string    `json:"ContentMD5"`
+	UsePutObject int       `json:"UsePutObject"`
 	Inner      bool      `json:"Inner"`
 }
