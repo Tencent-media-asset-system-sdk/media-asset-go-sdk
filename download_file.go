@@ -28,10 +28,10 @@ func (m *MediaAssetClient) DownloadFile(downloadURL, dir, fileName string) (err 
 			return errors.New("DownloadFileInner failed, parse url failed, error: " + err.Error() + " url: " + downloadURL)
 		}
 		filePath := u.Query().Get("Key")
-		filePath = path.Join(m.InnerDataDir, filePath)
 		if filePath == "" {
 			return errors.New("DownloadFileInner failed, filePath is null, url: " + downloadURL)
 		}
+		filePath = path.Join(m.InnerDataDir, filePath)
 		if _, err := os.Stat(filePath); err != nil {
 			return errors.New("DownloadFileInner failed, file " + filePath + " stat error : " + err.Error())
 		}
