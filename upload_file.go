@@ -41,8 +41,8 @@ func (m MediaAssetClient) applyUplod(mediaName string, mediaMeta request.MediaMe
 	uri := ""
 	header := map[string]string{}
 	req := &request.ApplyUploadRequest{}
-	req.TIBusinessID = uint32(m.TIBusinessID)
-	req.TIProjectID = uint32(m.TIProjectID)
+	req.TIBusinessID = m.TIBusinessID
+	req.TIProjectID = m.TIProjectID
 	req.Name = mediaName
 	req.MediaMeta = mediaMeta
 	req.Size = strconv.FormatUint(fileSize, 10)
@@ -98,8 +98,8 @@ func (m MediaAssetClient) commitUpload(mediaID uint64, bucket, key, uploadID str
 	uri := ""
 	header := map[string]string{}
 	req := &request.CommitUploadRequest{}
-	req.TIBusinessID = uint32(m.TIBusinessID)
-	req.TIProjectID = uint32(m.TIProjectID)
+	req.TIBusinessID = m.TIBusinessID
+	req.TIProjectID = m.TIProjectID
 	req.MediaID = mediaID
 	req.Bucket = bucket
 	req.Key = key

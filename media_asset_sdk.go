@@ -50,8 +50,8 @@ type MediaAssetClient struct {
 	Port                     int
 	SecretID                 string
 	SecretKey                string
-	TIProjectID              int
-	TIBusinessID             int
+	TIProjectID              uint32
+	TIBusinessID             uint32
 	Inner                    bool
 	InnerMediaAssetEndPoint  string
 	InnerFileManagerEndPoint string
@@ -62,7 +62,7 @@ type MediaAssetClient struct {
 
 // MakeMediaAssetClient 创建一个客户端
 func MakeMediaAssetClient(host string, port int, secretID, secretKey string,
-	tiProjectID, tiBusinessID int) *MediaAssetClient {
+	tiProjectID, tiBusinessID uint32) *MediaAssetClient {
 	if port == 0 {
 		port = 80
 	}

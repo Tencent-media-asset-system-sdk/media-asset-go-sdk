@@ -13,15 +13,16 @@ import (
 
 func main() {
 	var host, secretID, secretKey string
-	var coroutineNum, port, project, business int
+	var coroutineNum, port int
+	var project, business uint64
 	var filePath, mediaName, mediaType, mediaTag, mediaSecondTag, mediaLang string
 	flag.StringVar(&host, "host", "", "host ip 或者域名")
 	flag.StringVar(&secretID, "secret_id", "", "secretID")
 	flag.StringVar(&secretKey, "secret_key", "", "secretKey")
 	flag.IntVar(&port, "port", 80, "调用端口")
 	flag.IntVar(&coroutineNum, "j", 1, "分片上传最大并行数量")
-	flag.IntVar(&project, "project", 0, "TIprojectID")
-	flag.IntVar(&business, "business", 0, "TIBusinessID")
+	flag.Uint64Var(&project, "project", 0, "TIprojectID")
+	flag.Uint64Var(&business, "business", 0, "TIBusinessID")
 	flag.StringVar(&filePath, "path", "", "要上传的文件路径")
 	flag.StringVar(&mediaName, "name", "", "媒体名字")
 	flag.StringVar(&mediaType, "type", "视频", "媒体类型[视频、图片、音频]")
@@ -29,7 +30,7 @@ func main() {
 	flag.StringVar(&mediaSecondTag, "second_tag", "", "媒体二级标签[晚会、其他]")
 	flag.StringVar(&mediaLang, "lang", "普通话", "普通话 or 粤语")
 	flag.Parse()
-	client := mediaassetsdk.MakeMediaAssetClient(host, port, secretID, secretKey, project, business)
+	client := mediaassetsdk.MakeMediaAssetClient(host, port, secretID, secretKey, uint32(project), uint32(business))
 	// client.Inner = true
 	// client.InnerUserName = "superadmin"
 	// client.InnerMediaAssetEndPoint = "http://media-asset-service.ai-media.svc.cluster.local:8765"

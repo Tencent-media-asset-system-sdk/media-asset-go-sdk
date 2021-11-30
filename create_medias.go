@@ -33,8 +33,8 @@ func (m *MediaAssetClient) CreateMedias(req *request.CreateMediasRequest) (
 	}
 	uri := ""
 	header := map[string]string{}
-	req.TIBusinessID = uint32(m.TIBusinessID)
-	req.TIProjectID = uint32(m.TIProjectID)
+	req.TIBusinessID = m.TIBusinessID
+	req.TIProjectID = m.TIProjectID
 	req.Action = action
 	if m.Inner {
 		req.RequestID = common.GenerateRandomString(32)

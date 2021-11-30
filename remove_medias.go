@@ -33,8 +33,8 @@ func (m *MediaAssetClient) RemoveMedias(mediaIDs []uint64) (
 	uri := ""
 	header := map[string]string{}
 	req := &request.RemoveMediasRequest{}
-	req.TIBusinessID = uint32(m.TIBusinessID)
-	req.TIProjectID = uint32(m.TIProjectID)
+	req.TIBusinessID = m.TIBusinessID
+	req.TIProjectID = m.TIProjectID
 	req.MediaIDSet = mediaIDs
 	req.Action = action
 	if m.Inner {

@@ -33,8 +33,8 @@ func (m *MediaAssetClient) ModifyMedia(mediaID uint64, mediaTag, mediaSecondTag 
 	uri := ""
 	header := map[string]string{}
 	req := &request.ModifyMediaRequest{}
-	req.TIBusinessID = uint32(m.TIBusinessID)
-	req.TIProjectID = uint32(m.TIProjectID)
+	req.TIBusinessID = m.TIBusinessID
+	req.TIProjectID = m.TIProjectID
 	req.MediaID = mediaID
 	req.MediaTag = mediaTag
 	req.MediaSecondTag = mediaSecondTag

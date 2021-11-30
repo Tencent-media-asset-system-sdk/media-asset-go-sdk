@@ -32,8 +32,8 @@ func (m *MediaAssetClient) ModifyExpireTime(mediaID uint64, days int) (requestID
 	uri := ""
 	header := map[string]string{}
 	req := &request.ModifyExpireTimeRequest{}
-	req.TIBusinessID = uint32(m.TIBusinessID)
-	req.TIProjectID = uint32(m.TIProjectID)
+	req.TIBusinessID = m.TIBusinessID
+	req.TIProjectID = m.TIProjectID
 	req.MediaID = mediaID
 	req.Days = int32(days)
 	req.Action = action

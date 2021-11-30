@@ -33,8 +33,8 @@ func (m *MediaAssetClient) DescribeMedias(pageNumber, pageSize int, filterBy *re
 	uri := ""
 	header := map[string]string{}
 	req := &request.DescribeMediasRequest{}
-	req.TIBusinessID = uint32(m.TIBusinessID)
-	req.TIProjectID = uint32(m.TIProjectID)
+	req.TIBusinessID = m.TIBusinessID
+	req.TIProjectID = m.TIProjectID
 	req.PageNumber = int32(pageNumber)
 	req.PageSize = int32(pageSize)
 	req.FilterBy = *filterBy
