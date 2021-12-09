@@ -76,3 +76,13 @@ func MakeMediaAssetClient(host string, port int, secretID, secretKey string,
 		Inner:        false,
 	}
 }
+
+// CheckStatusFailed 检查媒体状态是否是上传失败
+func (client MediaAssetClient) CheckStatusFailed(status string) bool {
+	return status == MediaStateFailed || status == MediaStateDeleted || status == MediaStateCleaned
+}
+
+// CheckStatusSuccess 检查媒体状态是否是上传成功
+func (client MediaAssetClient) CheckStatusSuccess(status string) bool {
+	return status == MediaStateCompleted
+}
