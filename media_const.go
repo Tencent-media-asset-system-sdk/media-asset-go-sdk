@@ -6,7 +6,7 @@ const (
 	MediaTypeLive  = "直播流"
 	MediaTypeImage = "图片"
 	MediaTypeAudio = "音频"
-	MediaTypeText  = "文本"
+	MediaTypeText  = "文稿"
 )
 
 // 媒体标签
