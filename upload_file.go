@@ -25,11 +25,11 @@ import (
 const BloackSzie = 32 * 1024 * 1024
 
 func (m MediaAssetClient) applyUplod(mediaName string, mediaMeta request.MediaMeta, fileSize uint64) (
-	mediaID uint64, bucket, key, uploadId, requestID string, err error) {
+	mediaID string, bucket, key, uploadId, requestID string, err error) {
 
 	action := "ApplyUpload"
-	service := "app-cdn4aowk"
-	version := "2021-02-26"
+	service := SERVICE
+	version := VERSION
 	headerContent := tisign.HttpHeaderContent{
 		XTCAction:   action,             // 请求接口
 		XTCService:  service,            // 接口所属服务名
@@ -81,12 +81,12 @@ func (m MediaAssetClient) applyUplod(mediaName string, mediaMeta request.MediaMe
 		rsp.Response.UploadId, rsp.Response.RequestID, err
 }
 
-func (m MediaAssetClient) commitUpload(mediaID uint64, bucket, key, uploadID string) (
+func (m MediaAssetClient) commitUpload(mediaID string, bucket, key, uploadID string) (
 	requestID string, err error) {
 
 	action := "CommitUpload"
-	service := "app-cdn4aowk"
-	version := "2021-02-26"
+	service := SERVICE
+	version := VERSION
 	headerContent := tisign.HttpHeaderContent{
 		XTCAction:   action,             // 请求接口
 		XTCService:  service,            // 接口所属服务名
@@ -374,7 +374,7 @@ func (m *MediaAssetClient) UploadFile(filePath, mediaName string, mediaMeta requ
 	}
 	defer func() {
 		if err != nil {
-			m.RemoveMedias([]uint64{mediaID})
+			m.RemoveMedias([]string{mediaID})
 		}
 	}()
 
@@ -395,7 +395,7 @@ func (m *MediaAssetClient) UploadFile(filePath, mediaName string, mediaMeta requ
 	}
 
 	// 第四步，查询媒体信息
-	mediaSet, reqID, e := m.DescribeMediaDetails([]uint64{mediaID})
+	mediaSet, reqID, e := m.DescribeMediaDetails([]string{mediaID})
 	if reqID != "" {
 		requestIDSet = append(requestIDSet, reqID)
 	}
@@ -407,7 +407,7 @@ func (m *MediaAssetClient) UploadFile(filePath, mediaName string, mediaMeta requ
 		err = errors.New("UploadFile error, DescribeMediaDetails return null mediaiInfo")
 		return media, requestIDSet, err
 	}
-	if mediaSet[0].Status == "上传失败" {
+	if mediaSet[0].Status == 12 {
 		err = errors.New("素材错误, " + mediaSet[0].FailedReason)
 	}
 	return mediaSet[0], requestIDSet, err
@@ -434,7 +434,7 @@ func (m *MediaAssetClient) UploadBuf(buf []byte, mediaName string, mediaMeta req
 	}
 	defer func() {
 		if err != nil {
-			m.RemoveMedias([]uint64{mediaID})
+			m.RemoveMedias([]string{mediaID})
 		}
 	}()
 
@@ -455,7 +455,7 @@ func (m *MediaAssetClient) UploadBuf(buf []byte, mediaName string, mediaMeta req
 	}
 
 	// 第四步，查询媒体信息
-	mediaSet, reqID, e := m.DescribeMediaDetails([]uint64{mediaID})
+	mediaSet, reqID, e := m.DescribeMediaDetails([]string{mediaID})
 	if reqID != "" {
 		requestIDSet = append(requestIDSet, reqID)
 	}
@@ -467,7 +467,7 @@ func (m *MediaAssetClient) UploadBuf(buf []byte, mediaName string, mediaMeta req
 		err = errors.New("UploadFile error, DescribeMediaDetails return null mediaiInfo")
 		return media, requestIDSet, err
 	}
-	if mediaSet[0].Status == "上传失败" {
+	if mediaSet[0].Status == 12 {
 		err = errors.New("素材错误, " + mediaSet[0].FailedReason)
 	}
 	return mediaSet[0], requestIDSet, err

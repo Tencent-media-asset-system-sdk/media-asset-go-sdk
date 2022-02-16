@@ -20,8 +20,8 @@ func (m *MediaAssetClient) DescribeCategories() (
 		m.Port = 80
 	}
 	action := "DescribeCategories"
-	service := "app-cdn4aowk"
-	version := "2021-02-26"
+	service := SERVICE
+	version := VERSION
 	headerContent := tisign.HttpHeaderContent{
 		XTCAction:   action,             // 请求接口
 		XTCService:  service,            // 接口所属服务名

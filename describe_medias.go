@@ -20,8 +20,8 @@ func (m *MediaAssetClient) DescribeMedias(pageNumber, pageSize int, filterBy *re
 		m.Port = 80
 	}
 	action := "DescribeMedias"
-	service := "app-cdn4aowk"
-	version := "2021-02-26"
+	service := SERVICE
+	version := VERSION
 	headerContent := tisign.HttpHeaderContent{
 		XTCAction:   action,             // 请求接口
 		XTCService:  service,            // 接口所属服务名
@@ -37,7 +37,9 @@ func (m *MediaAssetClient) DescribeMedias(pageNumber, pageSize int, filterBy *re
 	req.TIProjectID = m.TIProjectID
 	req.PageNumber = int32(pageNumber)
 	req.PageSize = int32(pageSize)
-	req.FilterBy = *filterBy
+	if filterBy != nil {
+		req.FilterBy = *filterBy
+	}
 	req.Inner = m.Inner
 	req.Action = action
 	if m.Inner {

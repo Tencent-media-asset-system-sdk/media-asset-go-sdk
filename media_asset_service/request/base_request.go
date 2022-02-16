@@ -23,29 +23,29 @@ func (c CommonRequest) GetRequestId() string {
 
 // MediaMeta
 type MediaMeta struct {
-	MediaType      string `json:"MediaType" validate:"required"`
-	MediaTag       string `json:"MediaTag" validate:"required"`
-	MediaSecondTag string `json:"MediaSecondTag"`
-	MediaLang      string `json:"MediaLang"` // 普通话, 粤语
+	MediaType      int `json:"MediaType" validate:"required"`
+	MediaTag       int `json:"MediaTag" validate:"required"`
+	MediaSecondTag int `json:"MediaSecondTag"`
+	MediaLang      int `json:"MediaLang"` // 普通话, 粤语
 }
 
 // FilterBy
 type FilterBy struct {
-	MediaNameOrID string   `json:"MediaNameOrID"`
-	MediaTypeSet  []string `json:"MediaTypeSet"`
-	MediaTagSet   []Label  `json:"MediaTagSet"`
-	StatusSet     []string `json:"StatusSet"`
+	MediaNameOrID string  `json:"MediaNameOrID"`
+	MediaTypeSet  []int   `json:"MediaTypeSet"`
+	MediaTagSet   []Label `json:"MediaTagSet"`
+	StatusSet     []int   `json:"StatusSet"`
 }
 
 // Category
 type Category struct {
-	Type   string   `json:"Type"`
-	TagSet []string `json:"TagSet"`
+	Type   int   `json:"Type"`
+	TagSet []int `json:"TagSet"`
 }
 
 // Label
 type Label struct {
-	Type         string   `json:"Type"`
-	Tag          string   `json:"Tag"`
-	SecondTagSet []string `json:"SecondTagSet"`
+	Type         int   `json:"Type"`
+	Tag          int   `json:"Tag"`
+	SecondTagSet []int `json:"SecondTagSet"`
 }

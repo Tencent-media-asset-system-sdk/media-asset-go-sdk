@@ -27,7 +27,7 @@ type Error struct {
 
 // MediaInfo
 type MediaInfo struct {
-	MediaID     uint64  `json:"MediaID"`
+	MediaID     string  `json:"MediaID"`
 	Name        string  `json:"Name"`
 	Duration    float32 `json:"Duration"`
 	Size        uint32  `json:"Size"`
@@ -40,7 +40,7 @@ type MediaInfo struct {
 	RotateAngle float32 `json:"RotateAngle,omitempty"`
 	request.MediaMeta
 	DownLoadURL  string `json:"DownLoadURL"`
-	Status       string `json:"Status"`
+	Status       int    `json:"Status"`
 	FailedReason string `json:"FailedReason"`
 	Bucket       string `json:"Bucket,omitempty"`
 	Key          string `json:"Key,omitempty"`
@@ -50,6 +50,6 @@ type MediaInfo struct {
 
 // FailedMediaInfo
 type FailedMediaInfo struct {
-	MediaID      uint64 `json:"MediaID"`
+	MediaID      string `json:"MediaID"`
 	FailedReason string `json:"FailedReason"`
 }

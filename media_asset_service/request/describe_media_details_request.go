@@ -3,5 +3,5 @@ package request
 // DescribeMediaDetailsRequest
 type DescribeMediaDetailsRequest struct {
 	CommonRequest
-	MediaIDSet []uint64 `json:"MediaIDSet" validate:"required"`
+	MediaIDSet []string `json:"MediaIDSet" validate:"required"`
 }

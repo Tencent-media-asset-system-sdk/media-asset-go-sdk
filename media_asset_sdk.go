@@ -5,6 +5,11 @@ import (
 	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/media_asset_service/response"
 )
 
+const (
+	SERVICE = "app-cdn4aowk"
+	VERSION = "2021-02-26"
+)
+
 // MediaAssetFunction 媒体管理系统sdk功能列表
 type MediaAssetFunction interface {
 	// UploadFile 上传文件
@@ -26,19 +31,19 @@ type MediaAssetFunction interface {
 		mediaSet []*response.MediaInfo, totalCount int, requestID string, err error)
 
 	// DescribeMediaDetails 获取指定媒体集的详情
-	DescribeMediaDetails(mediaIDs []uint64) (mediaSet []*response.MediaInfo, requestID string, err error)
+	DescribeMediaDetails(mediaIDs []string) (mediaSet []*response.MediaInfo, requestID string, err error)
 
 	// RemoveMedias 删除指定媒体集
-	RemoveMedias(mediaIDs []uint64) (failedMediaSet []*response.FailedMediaInfo, requestID string, err error)
+	RemoveMedias(mediaIDs []string) (failedMediaSet []*response.FailedMediaInfo, requestID string, err error)
 
 	// DescribeCategories 返回可选媒体类型列表
 	DescribeCategories() (categortSet *response.DescribeCategoriesResponse, requestID string, err error)
 
 	// ModifyMedia 修改媒体信息
-	ModifyMedia(mediaID uint64, mediaTag, mediaSecondTag string) (requestID string, err error)
+	ModifyMedia(mediaID string, mediaTag, mediaSecondTag string) (requestID string, err error)
 
 	// ModifyExpireTime 修改文件过期时间，当前时间算起来，有效时间为 days 天
-	ModifyExpireTime(mediaID uint64, days int) (requestID string, err error)
+	ModifyExpireTime(mediaID string, days int) (requestID string, err error)
 
 	// CreateMedias 批量创建媒体
 	CreateMedias(req *request.CreateMediasRequest) (rsp *response.CreateMediasResponse, err error)
@@ -78,11 +83,11 @@ func MakeMediaAssetClient(host string, port int, secretID, secretKey string,
 }
 
 // CheckStatusFailed 检查媒体状态是否是上传失败
-func (client MediaAssetClient) CheckStatusFailed(status string) bool {
-	return status == MediaStateFailed || status == MediaStateDeleted || status == MediaStateCleaned
+func (client MediaAssetClient) CheckStatusFailed(status int) bool {
+	return status == 0 || status == 4 || status == 7 || status == 9 || status == 12 || status == 13
 }
 
 // CheckStatusSuccess 检查媒体状态是否是上传成功
-func (client MediaAssetClient) CheckStatusSuccess(status string) bool {
-	return status == MediaStateCompleted
+func (client MediaAssetClient) CheckStatusSuccess(status int) bool {
+	return status == 8
 }

@@ -14,13 +14,13 @@ import (
 )
 
 // ModifyExpireTime 修改文件过期时间，当前时间算起来，有效时间为 days 天
-func (m *MediaAssetClient) ModifyExpireTime(mediaID uint64, days int) (requestID string, err error) {
+func (m *MediaAssetClient) ModifyExpireTime(mediaID string, days int) (requestID string, err error) {
 	if m.Port == 0 {
 		m.Port = 80
 	}
 	action := "ModifyExpireTime"
-	service := "app-cdn4aowk"
-	version := "2021-02-26"
+	service := SERVICE
+	version := VERSION
 	headerContent := tisign.HttpHeaderContent{
 		XTCAction:   action,             // 请求接口
 		XTCService:  service,            // 接口所属服务名

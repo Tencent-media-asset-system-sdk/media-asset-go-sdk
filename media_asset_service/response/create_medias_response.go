@@ -11,5 +11,5 @@ type CreateMediasResponse struct {
 // UploadMediaInfo
 type UploadMediaInfo struct {
 	FailedReason string `json:"FailedReason"`
-	MediaID      uint64 `json:"MediaID"`
+	MediaID      string `json:"MediaID"`
 }

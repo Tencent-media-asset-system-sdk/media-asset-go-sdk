@@ -14,14 +14,14 @@ import (
 )
 
 // RemoveMedias 删除指定媒体集
-func (m *MediaAssetClient) RemoveMedias(mediaIDs []uint64) (
+func (m *MediaAssetClient) RemoveMedias(mediaIDs []string) (
 	failedMediaSet []*response.FailedMediaInfo, requestID string, err error) {
 	if m.Port == 0 {
 		m.Port = 80
 	}
 	action := "RemoveMedias"
-	service := "app-cdn4aowk"
-	version := "2021-02-26"
+	service := SERVICE
+	version := VERSION
 	headerContent := tisign.HttpHeaderContent{
 		XTCAction:   action,             // 请求接口
 		XTCService:  service,            // 接口所属服务名

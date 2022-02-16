@@ -14,14 +14,14 @@ import (
 )
 
 // DescribeMediaDetails 获取指定媒体集的详情
-func (m *MediaAssetClient) DescribeMediaDetails(mediaIDs []uint64) (
+func (m *MediaAssetClient) DescribeMediaDetails(mediaIDs []string) (
 	mediaSet []*response.MediaInfo, requestID string, err error) {
 	if m.Port == 0 {
 		m.Port = 80
 	}
 	action := "DescribeMediaDetails"
-	service := "app-cdn4aowk"
-	version := "2021-02-26"
+	service := SERVICE
+	version := VERSION
 	headerContent := tisign.HttpHeaderContent{
 		XTCAction:   action,             // 请求接口
 		XTCService:  service,            // 接口所属服务名

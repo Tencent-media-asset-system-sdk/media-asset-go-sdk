@@ -1,6 +1,8 @@
 package response
 
-import "github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/media_asset_service/request"
+import (
+	"github.com/Tencent-media-asset-system-sdk/media-asset-go-sdk/media_asset_service/request"
+)
 
 // DescribeCategoriesResponse
 type DescribeCategoriesResponse struct {
@@ -8,6 +10,6 @@ type DescribeCategoriesResponse struct {
 		CommonResponse
 		CategorySet []*request.Category `json:"CategorySet"`
 		LabelSet    []*request.Label    `json:"LabelSet"`
-		LangSet     []string            `json:"LangSet"`
+		LangSet     []int               `json:"LangSet"`
 	} `json:"Response"`
 }

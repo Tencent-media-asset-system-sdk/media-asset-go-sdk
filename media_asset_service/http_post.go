@@ -36,9 +36,11 @@ func HttpPost(uri string, header map[string]string, req interface{}, rsp interfa
 		return errors.New(errstr)
 	}
 	data, _ := ioutil.ReadAll(response.Body)
-	err = json.Unmarshal(data, rsp)
+	fixedData := fmt.Sprintf("{\"Response\":%s}", string(data))
+	err = json.Unmarshal([]byte(fixedData), rsp)
 	if err != nil {
-		errstr := fmt.Sprintf("HttpPost response protocol error, data: %s", data)
+		fmt.Print(err)
+		errstr := fmt.Sprintf("HttpPost response protocol error, data: %s", fixedData)
 		return errors.New(errstr)
 	}
 	return nil

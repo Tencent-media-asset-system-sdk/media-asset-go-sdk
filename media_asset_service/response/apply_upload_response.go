@@ -4,7 +4,7 @@ package response
 type ApplyUploadResponse struct {
 	Response struct {
 		CommonResponse
-		MediaID  uint64 `json:"MediaID"`
+		MediaID  string `json:"MediaID"`
 		Key      string `json:"Key"`
 		Bucket   string `json:"Bucket"`
 		UploadId string `json:"UploadId"`
