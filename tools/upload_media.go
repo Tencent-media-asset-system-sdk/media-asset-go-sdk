@@ -33,12 +33,13 @@ func main() {
 	flag.Parse()
 	client := mediaassetsdk.MakeMediaAssetClient(host, port, secretID, secretKey, uint32(project), uint32(business))
 
-	client.Inner = true
-	client.InnerUserName = "superadmin"
-	client.InnerMediaAssetEndPoint = "http://media-asset-service.ai-media.svc.cluster.local:8765"
-	client.InnerDataDir = "/data/ti-platform-fs/ti-file-server"
-	client.InnerFileManagerEndPoint = "http://ti-file-manager.ti-base.svc.cluster.local:55325"
-	client.InnerFileStaticEndPoint = "http://ti-static-file-server.ti-base.svc.cluster.local:55326"
+	// client.Inner = true
+	// client.InnerUin = "1-1"
+	// client.InnerInnerSubAccountUin = "superadmin"
+	// client.InnerMediaAssetEndPoint = "http://media-asset-service.ai-media.svc.cluster.local:8765"
+	// client.InnerDataDir = "/data/ti-platform-fs/ti-file-server"
+	// client.InnerFileManagerEndPoint = "http://ti-file-manager.ti-base.svc.cluster.local:55325"
+	// client.InnerFileStaticEndPoint = "http://ti-static-file-server.ti-base.svc.cluster.local:55326"
 
 	mediaMeta := request.MediaMeta{
 		MediaType:      mediaType,

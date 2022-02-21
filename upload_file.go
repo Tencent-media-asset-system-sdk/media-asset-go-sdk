@@ -53,8 +53,8 @@ func (m MediaAssetClient) applyUplod(mediaName string, mediaMeta request.MediaMe
 	}
 	if m.Inner {
 		req.RequestID = common.GenerateRandomString(32)
-		req.Uin = m.InnerUserName
-		req.SubAccountUin = m.InnerUserName
+		req.Uin = m.InnerUin
+		req.SubAccountUin = m.InnerSubAccountUin
 		uri = m.InnerMediaAssetEndPoint + "/" + action
 		header = nil
 	} else {
@@ -107,8 +107,8 @@ func (m MediaAssetClient) commitUpload(mediaID string, bucket, key, uploadID str
 	req.Action = action
 	if m.Inner {
 		req.RequestID = common.GenerateRandomString(32)
-		req.Uin = m.InnerUserName
-		req.SubAccountUin = m.InnerUserName
+		req.Uin = m.InnerUin
+		req.SubAccountUin = m.InnerSubAccountUin
 		uri = m.InnerMediaAssetEndPoint + "/" + action
 		header = nil
 	} else {

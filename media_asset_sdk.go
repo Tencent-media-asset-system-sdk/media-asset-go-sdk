@@ -6,8 +6,8 @@ import (
 )
 
 const (
-	SERVICE = "app-cdn4aowk"
-	VERSION = "2021-02-26"
+	SERVICE = "media-asset-service"
+	VERSION = "2022-02-22"
 )
 
 // MediaAssetFunction 媒体管理系统sdk功能列表
@@ -61,7 +61,8 @@ type MediaAssetClient struct {
 	InnerMediaAssetEndPoint  string
 	InnerFileManagerEndPoint string
 	InnerFileStaticEndPoint  string
-	InnerUserName            string
+	InnerUin                 string
+	InnerSubAccountUin       string
 	InnerDataDir             string
 }
 

@@ -39,8 +39,8 @@ func (m *MediaAssetClient) RemoveMedias(mediaIDs []string) (
 	req.Action = action
 	if m.Inner {
 		req.RequestID = common.GenerateRandomString(32)
-		req.Uin = m.InnerUserName
-		req.SubAccountUin = m.InnerUserName
+		req.Uin = m.InnerUin
+		req.SubAccountUin = m.InnerSubAccountUin
 		uri = m.InnerMediaAssetEndPoint + "/" + action
 		header = nil
 	} else {
