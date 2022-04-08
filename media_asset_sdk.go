@@ -6,8 +6,8 @@ import (
 )
 
 const (
-	SERVICE = "media-asset-service"
-	VERSION = "2022-02-22"
+	SERVICE = "ai-media-service"
+	VERSION = "2022-04-08"
 )
 
 // MediaAssetFunction 媒体管理系统sdk功能列表
