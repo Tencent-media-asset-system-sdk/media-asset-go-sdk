@@ -9,9 +9,10 @@ type CreateMediasRequest struct {
 
 // UploadMedia
 type UploadMedia struct {
-	Name       string    `json:"Name" validate:"required"`
-	LocalPath  string    `json:"LocalPath"`
-	MediaURL   string    `json:"MediaURL"`
-	ContentMD5 string    `json:"ContentMD5"`
-	MediaMeta  MediaMeta `json:"MediaMeta"`
+	Name            string    `json:"Name" validate:"required"`
+	LocalPath       string    `json:"LocalPath"`
+	MediaURL        string    `json:"MediaURL"`
+	ContentMD5      string    `json:"ContentMD5"`
+	MediaMeta       MediaMeta `json:"MediaMeta"`
+	BusinessMediaID string    `json:"BusinessMediaID"`
 }
