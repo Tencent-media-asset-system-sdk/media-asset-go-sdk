@@ -14,5 +14,6 @@ type UploadMedia struct {
 	MediaURL   string    `json:"MediaURL"`
 	ContentMD5 string    `json:"ContentMD5"`
 	MediaMeta  MediaMeta `json:"MediaMeta"`
+  BusinessMediaID string    `json:"BusinessMediaID"`
 	Persistent bool      `json:"Persistent"`
 }
