@@ -27,17 +27,18 @@ type Error struct {
 
 // MediaInfo
 type MediaInfo struct {
-	MediaID     uint64  `json:"MediaID"`
-	Name        string  `json:"Name"`
-	Duration    float32 `json:"Duration"`
-	Size        uint32  `json:"Size"`
-	Width       uint32  `json:"Width"`
-	Height      uint32  `json:"Height"`
-	FPS         float32 `json:"FPS"`
-	BitRate     uint32  `json:"BitRate"`
-	Format      string  `json:"Format"`
-	FrameCount  uint32  `json:"FrameCount,omitempty"`
-	RotateAngle float32 `json:"RotateAngle,omitempty"`
+	MediaID         uint64  `json:"MediaID"`
+	BusinessMediaID string  `json:"BusinessMediaID"`
+	Name            string  `json:"Name"`
+	Duration        float32 `json:"Duration"`
+	Size            uint32  `json:"Size"`
+	Width           uint32  `json:"Width"`
+	Height          uint32  `json:"Height"`
+	FPS             float32 `json:"FPS"`
+	BitRate         uint32  `json:"BitRate"`
+	Format          string  `json:"Format"`
+	FrameCount      uint32  `json:"FrameCount,omitempty"`
+	RotateAngle     float32 `json:"RotateAngle,omitempty"`
 	request.MediaMeta
 	DownLoadURL  string `json:"DownLoadURL"`
 	Status       string `json:"Status"`
