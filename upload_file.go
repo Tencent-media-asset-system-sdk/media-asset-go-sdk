@@ -24,7 +24,7 @@ import (
 // 上传分辨大小 10M
 const BloackSzie = 32 * 1024 * 1024
 
-func (m MediaAssetClient) applyUplod(mediaName string, mediaMeta request.MediaMeta, fileSize uint64) (
+func (m MediaAssetClient) applyUplod(mediaName string, mediaMeta request.MediaMeta, fileSize uint64, persistent bool) (
 	mediaID uint64, bucket, key, uploadId, requestID string, err error) {
 
 	action := "ApplyUpload"
@@ -46,6 +46,7 @@ func (m MediaAssetClient) applyUplod(mediaName string, mediaMeta request.MediaMe
 	req.Name = mediaName
 	req.MediaMeta = mediaMeta
 	req.Size = strconv.FormatUint(fileSize, 10)
+	req.Persistent = persistent
 	req.Inner = m.Inner
 	req.Action = action
 	if fileSize <= BloackSzie {
@@ -353,7 +354,8 @@ func (m MediaAssetClient) doUploadBuf(buf []byte, key, bucket, uploadID string, 
 // filePath 文件路径
 // coroutineNum 上传最大并发协程数
 // mediaInfo request.MediaMeta 媒体的类型和标签信息
-func (m *MediaAssetClient) UploadFile(filePath, mediaName string, mediaMeta request.MediaMeta, coroutineNum int) (
+func (m *MediaAssetClient) UploadFile(filePath, mediaName string, mediaMeta request.MediaMeta,
+	persistent bool, coroutineNum int) (
 	media *response.MediaInfo, requestIDSet []string, err error) {
 	if m.Port == 0 {
 		m.Port = 80
@@ -364,7 +366,7 @@ func (m *MediaAssetClient) UploadFile(filePath, mediaName string, mediaMeta requ
 		return media, requestIDSet, e
 	}
 	fileSize := stat.Size()
-	mediaID, bucket, key, uploadID, requestID, e := m.applyUplod(mediaName, mediaMeta, uint64(fileSize))
+	mediaID, bucket, key, uploadID, requestID, e := m.applyUplod(mediaName, mediaMeta, uint64(fileSize), persistent)
 	if requestID != "" {
 		requestIDSet = append(requestIDSet, requestID)
 	}
